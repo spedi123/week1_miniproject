@@ -68,10 +68,6 @@ def sign_up():
     doc = {
         "id": id_receive,
         "password": password_hash,
-        "profile_name": id_receive,
-        "profile_pic": "",
-        "profile_pic_real": "profile_pics/profile_placeholder.png",
-        "profile_info": ""
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
