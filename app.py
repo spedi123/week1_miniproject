@@ -13,7 +13,7 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-# 각자 로컬에서 돌리고 나중에 꼭 바꿔주세요!!!!
+# 각자 로컬에서 돌리고 나중에 꼭 바꿔주세요!!!
 client = MongoClient('localhost', 27017)
 db = client.dbsparta_plus_week4
 
