@@ -104,7 +104,7 @@ def gathering_join():
 
         temp_attended = user_info["attended"]
         temp_attended.append(title_receive)
-        db.users.update_one({'username': payload["id"]}, {'$set': {'joined': temp_attended}})
+        db.users.update_one({'id': payload["id"]}, {'$set': {'joined': temp_attended}})
 
         doc = {
             "title": title_receive,
