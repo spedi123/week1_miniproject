@@ -85,19 +85,44 @@ def check_dup():
 def gathering_join():
     token_receive = request.cookies.get('mytoken')
     try:
+        # 복호화 후 쿠키에서 유저 아이디 받아오기
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"id" : payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
+
+        # 이미 참석하기로 한 모임 리스트, request로 넘겨받은 모임 title 저장
         already_attended = user_info["attended"]
         title_receive = request.form["title_give"]
-        new_appointment_time = db.posts.find_one({"title": title_receive})["date"]
+
+        # 토글로 구현, bool값을 request로 전달해서 구분 - 삭제 요청인지 취소 요청인지
+        is_cancel = request.form["is_cancel_give"]
+
+        # 삭제 요청시 ~
+        if is_cancel:
+            temp_attended = user_info["attended"]
+            temp_attended.remove(title_receive)
+            db.users.update_one({'id': payload["id"]}, {'$set': {'joined': temp_attended}})
+            db.gathering_data.delete_one({'id': user_info['id']}, {'gathering_title': title_receive})
+
+            # 모임 정보 db, 유저 정보의 참석 리스트에서 각각 데이터값 삭제 완료 후 jsonify 리턴
+            return jsonify({'result' : 'success', "msg" : "모임 참석 취소 완료!"})
+
+
+        # gatherings db에서 새로 요청한 모임명 찾음, 그리고 시간값 받아와서 변수에 저장
+        new_appointment_time = db.gatherings.find_one({"title": title_receive})["date"]
+
+        # gatherings db에서 좀 전에 받아온 user db의 attended 배열에서 해당하는 값을 찾음
+        # 찾은 값을 already_attended_time에 저장
         already_attended_time = []
         for i in already_attended:
-            already_attended_time.append(db.posts.find_one({"title" : i})["date"])
+            already_attended_time.append(db.gatherings.find_one({"title" : i})["date"])
 
+        # 중복값 찾기
         for a in already_attended_time:
             if a == new_appointment_time:
-                return jsonify({"result": "failed", 'msg':'이미 해당 시간에 약속이 존재합니다.'})
+                #참석 불가, 리턴
+                return jsonify({"result": "failed", 'msg': '이미 해당 시간에 약속이 존재합니다.'})
 
+        # 이후 각 db에 저장 후
         temp_attended = user_info["attended"]
         temp_attended.append(title_receive)
         db.users.update_one({'id': payload["id"]}, {'$set': {'joined': temp_attended}})
