@@ -150,9 +150,6 @@ def read_gatherings():
     gatherings = list(db.gatherings.find({}, {'_id': False}))
     return jsonify({'all_gatherings': gatherings})
 
-@app.route('/')
-def home():
-   return render_template('index.html')
 
 
 @app.route('/api/gathering_create', methods=['POST'])
