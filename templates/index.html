@@ -30,6 +30,7 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
 
+
     <style>
         .title {
             font-weight: 800;
@@ -48,7 +49,18 @@
         }
     </style>
 
+   <style>
+        .card {
+            width : 500px;
+            height : 400px;
+            margin : auto;
+        }
+    </style>
     <script>
+        $(document).ready(function () {
+            gathering_infomation();
+        });
+
         function save_gathering() {
             let title = $('#title').val()
             let date = $('#date').val()
@@ -65,7 +77,7 @@
                     date_give: date,
                     agenda_give: agenda,
                     max_guests_give: max_guests,
-                    location: location,
+                    location_give: location,
                     restaurant_give: restaurant,
                 },
                 success: function (response) {
@@ -75,20 +87,68 @@
             });
         }
 
+        function gathering_infomation() {
+            $('#cards-box').empty()
+            $.ajax({
+                type: "GET",
+                url: "/gatherings",
+                data: {},
+                success: function (response) {
+                    let gatherings = response['all_gatherings']
+                    console.log(gatherings)
+                    for (let i = 0; i < gatherings.length; i++) {
+                        let title = gatherings[i]['title']
+                        let date = gatherings[i]['date']
+                        let agenda = gatherings[i]['agenda']
+                        let max_guests = gatherings[i]['max_guests']
+                        let location = gatherings[i]['location']
+                        let restaurant = gatherings[i]['restaurant']
+
+
+                        let temp_html = `<div class="card">
+                                            <img class="card-img-top"
+                                                 src=""
+                                                 alt="Card image cap">
+                                            <div class="card-body">
+                                                <a target="_blank" href="" class="card-title">${title}</a>
+                                                <p class="card-text">날짜 : ${date}</p>
+                                                <p class="card-text">${agenda}</p>
+                                                <p class="card-text">최대인원수 : ${max_guests}</p>
+                                                <p class="card-text">장소 : ${location}</p>
+                                                <p class="card-text">식당 : ${restaurant}</p>
+                                             </div>
+                                         </div>`
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            })
+        }
     </script>
 </head>
 <body class="has-navbar-fixed-top">
     <h1>모임 생성</h1>
 
-<!--    <div id="gathering_create_box">-->
-<!--        <div>제목 <input type="text" id="title"></div>-->
-<!--        <div>일자 <input type="date" id="date"></div>-->
-<!--        <div>내용 <input type="text" id="agenda"></div>-->
-<!--        <div>최대인원 <input type="number" id="max_guests"></div>-->
-<!--        <div>위치 <input type="text" id="location"></div>-->
-<!--        <div>맛집정보 <input type="text" id="restaurant"></div>-->
-<!--    </div>-->
-<!--    <button onclick="save_gathering()" id="create_btn"> 모임 작성 버튼 </button>-->
+
+<button id="test_button" onclick='$("#modal-gathering").addClass("is-active")'>자세히 보기 예시</button>
+<div class="modal" id="modal-gathering">
+
+    <div class="modal-background" onclick='$("#modal-gathering").removeClass("is-active")'></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">생성된 모임 정보</p>
+            <button class="delete" aria-label="close" onclick='$("#modal-gathering").removeClass("is-active")'></button>
+        </header>
+        <section class="modal-card-body">
+            <!-- Content ... -->
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Save changes</button>
+            <button class="button" onclick='$("#modal-gathering").removeClass("is-active")'>Cancel</button>
+        </footer>
+    </div>
+    <button class="modal-close is-large" aria-label="close"
+            onclick='$("#modal-gathering").removeClass("is-active")'></button>
+</div>
 
 
 <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
@@ -116,6 +176,8 @@
             </div>
         </div>
     </article>
+
+
     <div class="modal" id="modal-post">
         <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
         <div class="modal-content">
@@ -131,6 +193,9 @@
                                     <div>최대인원 <input class="input is-small" type="number" id="max-guest"></div>
                                     <div>위치 <input class="input is-small" type="text" id="location"></div>
                                     <div>맛집정보 <input class="input is-small" type="text" id="restaurant"></div>
+
+
+
                                 </div>
                         </div>
                         <nav class="level is-mobile">
@@ -155,8 +220,10 @@
                 onclick='$("#modal-post").removeClass("is-active")'></button>
     </div>
 
+
+
 </section>
-<section class="section">
+<section class="section" id = "post_box2" >
     <div id="post-box" class="container">
         <div class="box">
             <article class="media">
@@ -191,6 +258,29 @@
 
     </div>
 </section>
-
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                Title
+            </p>
+            <button class="card-header-icon" aria-label="more options">
+      <span class="icon">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+            </button>
+        </header>
+        <div class="card-content">
+            <div class="content">
+                <p>날짜 : </p>
+                <p>내용 : </p>
+                <p>최대인원수 : </p>
+                <p>장소 : </p>
+                <p>식당 : </p>
+            </div>
+        </div>
+        <footer class="card-footer">
+            <a href="#" class="card-footer-item">자세히 보기</a>
+        </footer>
+    </div>
 </body>
 </html>

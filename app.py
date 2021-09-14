@@ -80,7 +80,6 @@ def check_dup():
     # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
 
-
 @app.route('/gathering_join')
 def gathering_join():
     token_receive = request.cookies.get('mytoken')
@@ -90,16 +89,21 @@ def gathering_join():
         user_info = db.users.find_one({"id": payload["id"]})
 
         # 이미 참석하기로 한 모임 리스트, request로 넘겨받은 모임 title 저장
-        already_attended = user_info["attended"]
+        # str split(',')로 구현 할 예정이라 title에는 ,사용 금지 제약 걸어야
+        str_attended = user_info["attended"]
+        already_attended = str_attended.split(',')
+
         title_receive = request.form["title_give"]
 
         # 토글로 구현, bool값을 request로 전달해서 구분 - 삭제 요청인지 취소 요청인지
         is_cancel = request.form["is_cancel_give"]
 
-        # 삭제 요청시 ~
+        # 삭제 요청시(조건문 필요 없음)
         if is_cancel:
             temp_attended = user_info["attended"]
-            temp_attended.remove(title_receive)
+            temp_attended_list = temp_attended.split(',')
+            temp_attended_list.remove(title_receive)
+            temp_attended = ','.join(temp_attended_list)
             db.users.update_one({'id': payload["id"]}, {'$set': {'joined': temp_attended}})
             db.gathering_data.delete_one({'id': user_info['id']}, {'gathering_title': title_receive})
 
@@ -124,7 +128,10 @@ def gathering_join():
 
         # 이후 각 db에 저장 후
         temp_attended = user_info["attended"]
-        temp_attended.append(title_receive)
+        if len(temp_attended) >= 1:
+            temp_attended.join(',').join(title_receive)
+        else :
+            temp_attended.join(title_receive)
         db.users.update_one({'id': payload["id"]}, {'$set': {'joined': temp_attended}})
 
         doc = {
@@ -138,6 +145,10 @@ def gathering_join():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+@app.route('/gatherings', methods=['GET'])
+def read_gatherings():
+    gatherings = list(db.gatherings.find({}, {'_id': False}))
+    return jsonify({'all_gatherings': gatherings})
 
 @app.route('/')
 def home():
