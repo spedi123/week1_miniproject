@@ -1,28 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--쿠키, 토큰 발급용/필요에 따라 수정 할것 -->
+    <!--1. main page와 스타일 맞추기       -->
+    <!--2. 폰트 결정하기        -->
+    <!-- Webpage Title -->
+    <title>맛집 뭐시기 페이지 메인</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="스위터 - 세상을 달달하게"/>
+    <meta property="og:description" content="mini project for Web Plus"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Stylish&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
     <!-- JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
-    <!-- 구글폰트 -->
-    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
 
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <style>
+        .title {
+            font-weight: 800;
+            font-size: 5rem;
+            font-family: 'Stylish', sans-serif;
+        }
 
-    {#모임 작성 요청API#}
+        .subtitle {
+            font-family: 'Gamja Flower', cursive;
+            font-size: 2rem;
+
+        }
+
+        .help {
+            color: gray;
+        }
+    </style>
+
     <script>
         function save_gathering() {
             let title = $('#title').val()
@@ -52,17 +77,120 @@
 
     </script>
 </head>
-<body>
+<body class="has-navbar-fixed-top">
     <h1>모임 생성</h1>
 
-    <div id="gathering_create_box">
-        <div>제목 <input type="text" id="title"></div>
-        <div>일자 <input type="date" id="date"></div>
-        <div>내용 <input type="text" id="agenda"></div>
-        <div>최대인원 <input type="number" id="max_guests"></div>
-        <div>위치 <input type="text" id="location"></div>
-        <div>맛집정보 <input type="text" id="restaurant"></div>
+<!--    <div id="gathering_create_box">-->
+<!--        <div>제목 <input type="text" id="title"></div>-->
+<!--        <div>일자 <input type="date" id="date"></div>-->
+<!--        <div>내용 <input type="text" id="agenda"></div>-->
+<!--        <div>최대인원 <input type="number" id="max_guests"></div>-->
+<!--        <div>위치 <input type="text" id="location"></div>-->
+<!--        <div>맛집정보 <input type="text" id="restaurant"></div>-->
+<!--    </div>-->
+<!--    <button onclick="save_gathering()" id="create_btn"> 모임 작성 버튼 </button>-->
+
+
+<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="{{ url_for('static', filename='logo.png') }}">
+            <strong class="is-sparta"
+                    style="font-family: 'Stylish', sans-serif;font-size: larger;">SWEETER</strong>
+        </a>
     </div>
-    <button onclick="save_gathering()" id="create_btn"> 모임 작성 버튼 </button>
+</nav>
+<section class="section">
+    <article class="media">
+        <figure class="media-left" style="align-self: center">
+            <a class="image is-32x32" href="/user/{{ user_info.username }}">
+                <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
+            </a>
+        </figure>
+        <div class="media-content">
+            <div class="field">
+                <p class="control">
+                    <input id="input-post" class="input is-rounded" placeholder="?"
+                           onclick='$("#modal-post").addClass("is-active")'>
+                </p>
+            </div>
+        </div>
+    </article>
+    <div class="modal" id="modal-post">
+        <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+        <div class="modal-content">
+            <div class="box">
+                <article class="media">
+                    <div class="media-content">
+                        <div class="field">
+
+                                <div id="gathering_create_box">
+                                    <div>제목<input class="input is-small" type="text" id="title" placeholder="모임 제목을 설정해주세요"></div>
+                                    <div>일자 <input class="input is-small" type="date" id="date"></div>
+                                    <div>내용 <textarea class="textarea" placeholder="모임 참석 내용" rows="10" id="agenda"></textarea></div>
+                                    <div>최대인원 <input class="input is-small" type="number" id="max-guest"></div>
+                                    <div>위치 <input class="input is-small" type="text" id="location"></div>
+                                    <div>맛집정보 <input class="input is-small" type="text" id="restaurant"></div>
+                                </div>
+                        </div>
+                        <nav class="level is-mobile">
+                            <div class="level-left">
+
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <a class="button is-sparta" onclick="save_gathering()" id="create_btn">모임 작성</a>
+                                </div>
+                                <div class="level-item">
+                                    <a class="button is-sparta is-outlined"
+                                       onclick='$("#modal-post").removeClass("is-active")'>취소</a>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"
+                onclick='$("#modal-post").removeClass("is-active")'></button>
+    </div>
+
+</section>
+<section class="section">
+    <div id="post-box" class="container">
+        <div class="box">
+            <article class="media">
+                <div class="media-left">
+                    <a class="image is-64x64" href="#">
+                        <img class="is-rounded"
+                             src={{ url_for("static", filename="profile_pics/profile_placeholder.png") }} alt="Image">
+                    </a>
+                </div>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>
+                            <br>
+                            글을 적는 칸
+                        </p>
+                    </div>
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a class="level-item is-sparta" aria-label="heart"
+                               onclick="toggle_like('', 'heart')">
+                                        <span class="icon is-small"><i class="fa fa-heart"
+                                                                       aria-hidden="true"></i></span>&nbsp;<span
+                                    class="like-num">2.7k</span>
+                            </a>
+                        </div>
+
+                    </nav>
+                </div>
+            </article>
+        </div>
+
+    </div>
+</section>
+
 </body>
 </html>

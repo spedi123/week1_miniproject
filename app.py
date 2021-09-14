@@ -135,7 +135,9 @@ def gathering_join():
         return jsonify({"result" : "success", 'msg' : '조인 완료'})
 
 
-        #---/api/gathering_create_by_주혁---#
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
 
 @app.route('/')
 def home():
@@ -144,6 +146,7 @@ def home():
 
 @app.route('/api/gathering_create', methods=['POST'])
 def save_gathering():
+
     # 모임 저장하기
     title_receive = request.form['title_give']
     date_receive = request.form['date_give']
@@ -166,8 +169,7 @@ def save_gathering():
 
 
 
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-         return redirect(url_for("home"))
+
 
 
 
