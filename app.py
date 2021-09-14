@@ -23,7 +23,7 @@ def home():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
         return render_template('index.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -41,15 +41,15 @@ def login():
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
     # 로그인
-    username_receive = request.form['username_give']
+    id_receive = request.form['id_give']
     password_receive = request.form['password_give']
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    result = db.users.find_one({'username': username_receive, 'password': pw_hash})
+    result = db.users.find_one({'id': id_receive, 'password': pw_hash})
 
     if result is not None:
         payload = {
-         'id': username_receive,
+         'id': id_receive,
          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
@@ -62,13 +62,13 @@ def sign_in():
 
 @app.route('/sign_up/save', methods=['POST'])
 def sign_up():
-    username_receive = request.form['username_give']
+    id_receive = request.form['id_give']
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        "username": username_receive,
+        "id": id_receive,
         "password": password_hash,
-        "profile_name": username_receive,
+        "profile_name": id_receive,
         "profile_pic": "",
         "profile_pic_real": "profile_pics/profile_placeholder.png",
         "profile_info": ""
@@ -79,11 +79,44 @@ def sign_up():
 
 @app.route('/sign_up/check_dup', methods=['POST'])
 def check_dup():
-    username_receive = request.form['username_give']
-    exists = bool(db.users.find_one({"username": username_receive}))
+    id_receive = request.form['id_give']
+    exists = bool(db.users.find_one({"id": id_receive}))
     # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
 
+
+@app.route('/gathering_join')
+def gathering_join():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"id" : payload["id"]})
+        already_attended = user_info["attended"]
+        title_receive = request.form["title_give"]
+        new_appointment_time = db.posts.find_one({"title": title_receive})["date"]
+        already_attended_time = []
+        for i in already_attended:
+            already_attended_time.append(db.posts.find_one({"title" : i})["date"])
+
+        for a in already_attended_time:
+            if a == new_appointment_time:
+                return jsonify({"result": "failed", 'msg':'이미 해당 시간에 약속이 존재합니다.'})
+
+        temp_attended = user_info["attended"]
+        temp_attended.append(title_receive)
+        db.users.update_one({'username': payload["id"]}, {'$set': {'joined': temp_attended}})
+
+        doc = {
+            "title": title_receive,
+            "id": user_info["id"]
+        }
+        db.post_data.insert_one(doc)
+        return jsonify({"result" : "success", 'msg' : '조인 완료'})
+
+
+
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+         return redirect(url_for("home"))
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

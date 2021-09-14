@@ -73,16 +73,16 @@
             }
 
             function check_dup() {
-                let username = $("#input-username").val()
-                console.log(username)
-                if (username == "") {
+                let id = $("#input-id").val()
+                console.log(id)
+                if (id == "") {
                     $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
-                    $("#input-username").focus()
+                    $("#input-id").focus()
                     return;
                 }
-                if (!is_nickname(username)) {
+                if (!is_nickname(id)) {
                     $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
-                    $("#input-username").focus()
+                    $("#input-id").focus()
                     return;
                 }
                 $("#help-id").addClass("is-loading")
@@ -90,13 +90,13 @@
                     type: "POST",
                     url: "/sign_up/check_dup",
                     data: {
-                        username_give: username
+                        id_give: id
                     },
                     success: function (response) {
 
                         if (response["exists"]) {
                             $("#help-id").text("이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
-                            $("#input-username").focus()
+                            $("#input-id").focus()
                         } else {
                             $("#help-id").text("사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
                         }
@@ -107,7 +107,7 @@
             }
 
             function sign_up() {
-                let username = $("#input-username").val()
+                let id = $("#input-id").val()
                 let password = $("#input-password").val()
                 let password2 = $("#input-password2").val()
 
@@ -146,7 +146,7 @@
                     type: "POST",
                     url: "/sign_up/save",
                     data: {
-                        username_give: username,
+                        id_give: id,
                         password_give: password
                     },
                     success: function (response) {
@@ -158,12 +158,12 @@
             }
 
             function sign_in() {
-                let username = $("#input-username").val()
+                let id = $("#input-id").val()
                 let password = $("#input-password").val()
 
-                if (username == "") {
+                if (id == "") {
                     $("#help-id-login").text("아이디를 입력해주세요.")
-                    $("#input-username").focus()
+                    $("#input-id").focus()
                     return;
                 } else {
                     $("#help-id-login").text("")
@@ -180,7 +180,7 @@
                     type: "POST",
                     url: "/sign_in",
                     data: {
-                        username_give: username,
+                        id_give: id,
                         password_give: password
                     },
                     success: function (response) {
@@ -213,7 +213,7 @@
                             <div class="content">
                                 <div class="field has-addons">
                                     <div class="control has-icons-left" style="width:100%">
-                                        <input id="input-username" class="input" type="text" placeholder="아이디">
+                                        <input id="input-id" class="input" type="text" placeholder="아이디">
                                         <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
                                     </div>
                                     <div id="btn-check-dup" class="control is-hidden">
