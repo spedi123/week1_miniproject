@@ -1,10 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>Title</title>
+
+    {#모임 작성 요청API#}
+    <script>
+        function save_gathering() {
+            let title = $('#title').val()
+            let date = $('#date').val()
+            let agenda = $('#agenda').val()
+            let max_guests = $('#max_guests').val()
+            let location = $('#location').val()
+            let restaurant = $('#restaurant').val()
+
+            $.ajax({
+                type: "POST",
+                url: '/api/gathering_create',
+                data: {
+                    title_give: title,
+                    date_give: date,
+                    agenda_give: agenda,
+                    max_guests_give: max_guests,
+                    location: location,
+                    restaurant_give: restaurant,
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+    </script>
 </head>
 <body>
+    <h1>모임 생성</h1>
 
+    <div id="gathering_create_box">
+        <div>제목 <input type="text" id="title"></div>
+        <div>일자 <input type="date" id="date"></div>
+        <div>내용 <input type="text" id="agenda"></div>
+        <div>최대인원 <input type="number" id="max_guests"></div>
+        <div>위치 <input type="text" id="location"></div>
+        <div>맛집정보 <input type="text" id="restaurant"></div>
+    </div>
+    <button onclick="save_gathering()" id="create_btn"> 모임 작성 버튼 </button>
 </body>
 </html>

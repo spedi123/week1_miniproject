@@ -135,9 +135,46 @@ def gathering_join():
         return jsonify({"result" : "success", 'msg' : '조인 완료'})
 
 
+        #---/api/gathering_create_by_주혁---#
+
+@app.route('/')
+def home():
+   return render_template('index.html')
+
+
+@app.route('/api/gathering_create', methods=['POST'])
+def save_gathering():
+    # 모임 저장하기
+    title_receive = request.form['title_give']
+    date_receive = request.form['date_give']
+    agenda_receive = request.form['date_give']
+    max_guests_receive = request.form['date_give']
+    location_receive = request.form['date_give']
+    restaurant_receive = request.form['date_give']
+
+    doc = {
+        'title' : title_receive,
+        'date' : date_receive,
+        'agenda': agenda_receive,
+        'max_guests': max_guests_receive,
+        'location': location_receive,
+        'restaurant': restaurant_receive,
+    }
+
+    db.gatherings.insert_one(doc)
+    return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 개최 완료!'})
+
+
 
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
          return redirect(url_for("home"))
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
