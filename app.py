@@ -158,10 +158,10 @@ def save_gathering():
     # 모임 저장하기
     title_receive = request.form['title_give']
     date_receive = request.form['date_give']
-    agenda_receive = request.form['date_give']
-    max_guests_receive = request.form['date_give']
-    location_receive = request.form['date_give']
-    restaurant_receive = request.form['date_give']
+    agenda_receive = request.form['agenda_give']
+    max_guests_receive = request.form['max_guests_give']
+    location_receive = request.form['location_give']
+    restaurant_receive = request.form['restaurant_give']
 
     doc = {
         'title' : title_receive,
