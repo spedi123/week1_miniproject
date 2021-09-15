@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
@@ -68,6 +67,7 @@ def sign_up():
     doc = {
         "id": id_receive,
         "password": password_hash,
+        "attended": ''
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -124,7 +124,7 @@ def gathering_join():
         for a in already_attended_time:
             if a == new_appointment_time:
                 #참석 불가, 리턴
-                return jsonify({"result": "failed", 'msg': '이미 해당 시간에 약속이 존재합니다.'})
+                return jsonify({"result": "success", 'msg': '이미 해당 시간에 약속이 존재합니다.'})
 
         # 이후 각 db에 저장 후
         temp_attended = user_info["attended"]

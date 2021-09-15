@@ -30,7 +30,6 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
 
-
     <style>
         .title {
             font-weight: 800;
@@ -49,11 +48,11 @@
         }
     </style>
 
-   <style>
+    <style>
         .card {
-            width : 500px;
-            height : 400px;
-            margin : auto;
+            width: 500px;
+            height: 400px;
+            margin: auto;
         }
     </style>
     <script>
@@ -88,39 +87,39 @@
         }
 
         /* 9/15 오전 추가 내용_update_gathering */
-        function update_gethering(title,date,agenda,max_guests,location,restaurant) {
-            console.log(title,date,agenda,max_guests,location,restaurant)
-               $.ajax({
-                   type: "POST",
-                   url: "/api/update",
-                   data: {
-                       title_give: title,
-                       date_give: date,
-                       agenda_give: agenda,
-                       max_guests_give: max_guests,
-                       location_give: location,
-                       restaurant_give: restaurant,
-                   },
-                   success: function (response) {
-                       alert(response["msg"])
-                       window.location.reload();
-                   }
-               });
+        function update_gethering(title, date, agenda, max_guests, location, restaurant) {
+            console.log(title, date, agenda, max_guests, location, restaurant)
+            $.ajax({
+                type: "POST",
+                url: "/api/update",
+                data: {
+                    title_give: title,
+                    date_give: date,
+                    agenda_give: agenda,
+                    max_guests_give: max_guests,
+                    location_give: location,
+                    restaurant_give: restaurant,
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload();
+                }
+            });
         }
 
         /* 9/15 오전 추가 내용_delete_gathering */
         function delete_gethering(title) {
             $.ajax({
-                   type: "POST",
-                   url: "/api/delete",
-                   data: {
-                       title_give: title,
-                   },
-                   success: function (response) {
-                       alert(response["msg"])
-                       window.location.reload();
-                   }
-               });
+                type: "POST",
+                url: "/api/delete",
+                data: {
+                    title_give: title,
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload();
+                }
+            });
         }
 
         function gathering_infomation() {
@@ -139,46 +138,76 @@
                         let max_guests = gatherings[i]['max_guests']
                         let location = gatherings[i]['location']
                         let restaurant = gatherings[i]['restaurant']
+                        let temp_html = `<div id="post-box" class="container">
+                                            <div class="box">
+                                                <article class="media">
+                                                    <div class="media-left">
+                                                        <!--     음식점 이미지         -->
+                                                        </a>
+                                                    </div>
+                                                    <div class="media-content">
+                                                        <div class="content">
+                                                            <p>
+                                                                <strong>${restaurant}</strong> <small>@${location}</small>
+                                                                <br>
+                                                                ${agenda}
+                                                            </p>
+                                                        </div>
+                                                        <nav class="level is-mobile">
+                                                            <div class="level-left">
+                                                                <a class="level-item is-sparta" aria-label=""
+                                                                   onclick="toggle_like('', 'heart')">
+                                                                    <!--  이 부분변경해서 참석, 참석정원 버튼으로 쓸 예정    -->
+                                                                            <span class="icon is-small"><i class="fa fa-heart"
+                                                                                                           aria-hidden="true"></i></span>&nbsp;<span
+                                                                        class="left-num">Left : 03(남은 모임 정원 맵핑)</span>
+                                                                </a>
+                                                                <div class="buttons are-small is-rounded">
+                                                                <button class="button is-info is-inverted" onclick='$("#modal-gathering${i}").addClass("is-active")'>Info</button>
+                                                                <button class="button is-success is-inverted">Join</button>
+                                                                <button class="button is-danger is-inverted">Cancel</button>
+                                                                </div>
+                                                            </div>
 
-                        /*
-                        let temp_html = `<div class="card">
-                                            <img class="card-img-top"
-                                                 src=""
-                                                 alt="Card image cap">
-                                            <div class="card-body">
-                                                <a target="_blank" href="" class="card-title">${title}</a>
-                                                <p class="card-text">날짜 : ${date}</p>
-                                                <p class="card-text">${agenda}</p>
-                                                <p class="card-text">최대인원수 : ${max_guests}</p>
-                                                <p class="card-text">장소 : ${location}</p>
-                                                <p class="card-text">식당 : ${restaurant}</p>
-                                             </div>
-                                         </div>`
-                        $('#cards-box').append(temp_html)
-                        */
+                                                        </nav>
+                                                    </div>
+                                                </article>
+                                            </div>
 
-                        /* temp_html 부분 test용 버튼 추가 및 아규먼트 추가한 내용_ 위 주석처리한 코드에서 수정*/
-                        let temp_html = `<div class="card">
-                                             <img class="card-img-top"
-                                                  src=""
-                                                  alt="Card image cap">
-                                             <div class="card-body">
-                                                 <a target="_blank" href="" class="card-title">${title}</a>
-                                                 <p class="card-text">날짜 : ${date}</p>
-                                                 <p class="card-text">${agenda}</p>
-                                                 <p class="card-text">최대인원수 : ${max_guests}</p>
-                                                 <p class="card-text">장소 : ${location}</p>
-                                                 <p class="card-text">식당 : ${restaurant}</p>
-                                                 <button onclick="update_gethering('${title}','${date}','${agenda}','${max_guests}','${location}','${restaurant}')">수정버튼</button>
-                                                 <button onclick="delete_gethering('${title}')">삭제버튼</button>
-                                              </div>
-                                          </div>`
-                         $('#cards-box').append(temp_html)
+                                        </div>
+                                        <div class="modal" id="modal-gathering${i}">
+                                        <div class="modal-background" onclick='$("#modal-gathering${i}").removeClass("is-active")'></div>
+                                        <div class="modal-card">
+                                            <header class="modal-card-head">
+                                                <p class="modal-card-title">${title}</p>
+                                                <button class="delete" aria-label="close" onclick='$("#modal-gathering${i}").removeClass("is-active")'></button>
+                                            </header>
+                                            <section class="modal-card-body">
+                                                <div class="content">
+                                                    <p>날짜 : ${date}</p>
+                                                    <p>내용 : ${agenda}</p>
+                                                    <p>인원수 : 잔여 인원수 / ${max_guests}</p>
+                                                    <p>장소 : ${location}</p>
+                                                    <p>식당 : ${restaurant}</p>
+                                                </div>
+                                            </section>
+                                            <footer class="modal-card-foot">
+                                                <button class="button is-success">Revise</button>
+                                                <button class="button is-success">Delete</button>
+                                                <button class="button is-success">Join</button>
+                                                <button class="button" onclick='$("#modal-gathering${i}").removeClass("is-active")'>Cancel</button>
+                                            </footer>
+                                        </div>
+                                        <button class="modal-close is-large" aria-label="close"
+                                                onclick='$("#modal-gathering${i}").removeClass("is-active")'></button>
+                                    </div>`
+                        $('#post_box2').append(temp_html)
 
                     }
                 }
             })
         }
+
         // 어떤 버튼(참가, 취소)으로 참가했냐에 따라서 인자를 따로 전달
         // ex : 참석 버튼 -> gathering_join(false)
         function gathering_join(bool_by_button) {
@@ -203,29 +232,11 @@
     </script>
 </head>
 <body class="has-navbar-fixed-top">
-    <h1>모임 생성</h1>
+<h1>모임 생성</h1>
 
 
-<button id="test_button" onclick='$("#modal-gathering").addClass("is-active")'>자세히 보기 예시</button>
-<div class="modal" id="modal-gathering">
 
-    <div class="modal-background" onclick='$("#modal-gathering").removeClass("is-active")'></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">생성된 모임 정보</p>
-            <button class="delete" aria-label="close" onclick='$("#modal-gathering").removeClass("is-active")'></button>
-        </header>
-        <section class="modal-card-body">
-            <!-- Content ... -->
-        </section>
-        <footer class="modal-card-foot">
-            <button class="button is-success">Save changes</button>
-            <button class="button" onclick='$("#modal-gathering").removeClass("is-active")'>Cancel</button>
-        </footer>
-    </div>
-    <button class="modal-close is-large" aria-label="close"
-            onclick='$("#modal-gathering").removeClass("is-active")'></button>
-</div>
+
 
 
 <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
@@ -263,17 +274,18 @@
                     <div class="media-content">
                         <div class="field">
 
-                                <div id="gathering_create_box">
-                                    <div>제목<input class="input is-small" type="text" id="title" placeholder="모임 제목을 설정해주세요"></div>
-                                    <div>일자 <input class="input is-small" type="date" id="date"></div>
-                                    <div>내용 <textarea class="textarea" placeholder="모임 참석 내용" rows="10" id="agenda"></textarea></div>
-                                    <div>최대인원 <input class="input is-small" type="number" id="max-guest"></div>
-                                    <div>위치 <input class="input is-small" type="text" id="location"></div>
-                                    <div>맛집정보 <input class="input is-small" type="text" id="restaurant"></div>
-
-
-
+                            <div id="gathering_create_box">
+                                <div>제목<input class="input is-small" type="text" id="title" placeholder="모임 제목을 설정해주세요">
                                 </div>
+                                <div>일자 <input class="input is-small" type="date" id="date"></div>
+                                <div>내용 <textarea class="textarea" placeholder="모임 참석 내용" rows="10"
+                                                  id="agenda"></textarea></div>
+                                <div>최대인원 <input class="input is-small" type="number" id="max-guest"></div>
+                                <div>위치 <input class="input is-small" type="text" id="location"></div>
+                                <div>맛집정보 <input class="input is-small" type="text" id="restaurant"></div>
+
+
+                            </div>
                         </div>
                         <nav class="level is-mobile">
                             <div class="level-left">
@@ -298,34 +310,37 @@
     </div>
 
 
-
 </section>
-<section class="section" id = "post_box2" >
+<section class="section" id="post_box2">
     <div id="post-box" class="container">
         <div class="box">
             <article class="media">
                 <div class="media-left">
-                    <a class="image is-64x64" href="#">
-                        <img class="is-rounded"
-                             src={{ url_for("static", filename="profile_pics/profile_placeholder.png") }} alt="Image">
+                    <!--     음식점 이미지         -->
                     </a>
                 </div>
                 <div class="media-content">
                     <div class="content">
                         <p>
-                            <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>
+                            <strong>맨야 하나비(식당 맵핑)</strong> <small>@송파구 석촌동(장소 맵핑)</small>
                             <br>
-                            글을 적는 칸
+                            여기에 모임 내용을 쓰세요(내용 맵핑)
                         </p>
                     </div>
                     <nav class="level is-mobile">
                         <div class="level-left">
-                            <a class="level-item is-sparta" aria-label="heart"
+                            <a class="level-item is-sparta" aria-label=""
                                onclick="toggle_like('', 'heart')">
+                                <!--  이 부분변경해서 참석, 참석정원 버튼으로 쓸 예정    -->
                                         <span class="icon is-small"><i class="fa fa-heart"
                                                                        aria-hidden="true"></i></span>&nbsp;<span
-                                    class="like-num">2.7k</span>
+                                    class="left-num">Left : 03(남은 모임 정원 맵핑)</span>
                             </a>
+                            <div class="buttons are-small is-rounded">
+                            <button class="button is-info is-inverted" onclick='$("#modal-gathering").addClass("is-active")'>Info</button>
+                            <button class="button is-success is-inverted">Join</button>
+                            <button class="button is-danger is-inverted">Cancel</button>
+                            </div>
                         </div>
 
                     </nav>
@@ -334,30 +349,56 @@
         </div>
 
     </div>
+    <div class="modal" id="modal-gathering">
+    <div class="modal-background" onclick='$("#modal-gathering").removeClass("is-active")'></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">모임 타이틀(타이틀 맵핑)</p>
+            <button class="delete" aria-label="close" onclick='$("#modal-gathering").removeClass("is-active")'></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="content">
+                <p>날짜 : (날짜 맵핑)</p>
+                <p>내용 : (내용 맵핑) 이미지 넣거나 카드 꾸미거나 단락 예쁘게 바꾸는건 나중에 합시다</p>
+                <p>인원수 : (최대 인원수 맵핑/잔여 인원)</p>
+                <p>장소 : (장소 맵핑)</p>
+                <p>식당 : (식당 이름 맵핑)</p>
+            </div>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Revise</button>
+            <button class="button is-success">Delete</button>
+            <button class="button is-success">Join</button>
+            <button class="button" onclick='$("#modal-gathering").removeClass("is-active")'>Cancel</button>
+        </footer>
+    </div>
+    <button class="modal-close is-large" aria-label="close"
+            onclick='$("#modal-gathering").removeClass("is-active")'></button>
+</div>
 </section>
-    <div class="card">
-        <header class="card-header">
-            <p class="card-header-title">
-                Title
-            </p>
-            <button class="card-header-icon" aria-label="more options">
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            Title
+        </p>
+        <button class="card-header-icon" aria-label="more options">
       <span class="icon">
         <i class="fas fa-angle-down" aria-hidden="true"></i>
       </span>
-            </button>
-        </header>
-        <div class="card-content">
-            <div class="content">
-                <p>날짜 : </p>
-                <p>내용 : </p>
-                <p>최대인원수 : </p>
-                <p>장소 : </p>
-                <p>식당 : </p>
-            </div>
+        </button>
+    </header>
+    <div class="card-content">
+        <div class="content">
+            <p>날짜 : </p>
+            <p>내용 : </p>
+            <p>최대인원수 : </p>
+            <p>장소 : </p>
+            <p>식당 : </p>
         </div>
-        <footer class="card-footer">
-            <a href="#" class="card-footer-item">자세히 보기</a>
-        </footer>
     </div>
+    <footer class="card-footer">
+        <a href="#" class="card-footer-item">자세히 보기</a>
+    </footer>
+</div>
 </body>
 </html>
