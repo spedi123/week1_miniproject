@@ -87,6 +87,42 @@
             });
         }
 
+        /* 9/15 오전 추가 내용_update_gathering */
+        function update_gethering(title,date,agenda,max_guests,location,restaurant) {
+            console.log(title,date,agenda,max_guests,location,restaurant)
+               $.ajax({
+                   type: "POST",
+                   url: "/api/update",
+                   data: {
+                       title_give: title,
+                       date_give: date,
+                       agenda_give: agenda,
+                       max_guests_give: max_guests,
+                       location_give: location,
+                       restaurant_give: restaurant,
+                   },
+                   success: function (response) {
+                       alert(response["msg"])
+                       window.location.reload();
+                   }
+               });
+        }
+
+        /* 9/15 오전 추가 내용_delete_gathering */
+        function delete_gethering(title) {
+            $.ajax({
+                   type: "POST",
+                   url: "/api/delete",
+                   data: {
+                       title_give: title,
+                   },
+                   success: function (response) {
+                       alert(response["msg"])
+                       window.location.reload();
+                   }
+               });
+        }
+
         function gathering_infomation() {
             $('#cards-box').empty()
             $.ajax({
@@ -104,7 +140,7 @@
                         let location = gatherings[i]['location']
                         let restaurant = gatherings[i]['restaurant']
 
-
+                        /*
                         let temp_html = `<div class="card">
                                             <img class="card-img-top"
                                                  src=""
@@ -119,6 +155,26 @@
                                              </div>
                                          </div>`
                         $('#cards-box').append(temp_html)
+                        */
+
+                        /* temp_html 부분 test용 버튼 추가 및 아규먼트 추가한 내용_ 위 주석처리한 코드에서 수정*/
+                        let temp_html = `<div class="card">
+                                             <img class="card-img-top"
+                                                  src=""
+                                                  alt="Card image cap">
+                                             <div class="card-body">
+                                                 <a target="_blank" href="" class="card-title">${title}</a>
+                                                 <p class="card-text">날짜 : ${date}</p>
+                                                 <p class="card-text">${agenda}</p>
+                                                 <p class="card-text">최대인원수 : ${max_guests}</p>
+                                                 <p class="card-text">장소 : ${location}</p>
+                                                 <p class="card-text">식당 : ${restaurant}</p>
+                                                 <button onclick="update_gethering('${title}','${date}','${agenda}','${max_guests}','${location}','${restaurant}')">수정버튼</button>
+                                                 <button onclick="delete_gethering('${title}')">삭제버튼</button>
+                                              </div>
+                                          </div>`
+                         $('#cards-box').append(temp_html)
+
                     }
                 }
             })
