@@ -59,6 +59,11 @@
             gathering_infomation();
 
         });
+        function foo(torf, title) {
+                console.log(torf);
+                console.log(title)
+                console.log("why the fuck")
+            }
 
         function save_gathering() {
             let title = $('#title').val()
@@ -78,6 +83,26 @@
                     max_guests_give: max_guests,
                     location_give: location,
                     restaurant_give: restaurant,
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+        // 어떤 버튼(참가, 취소)으로 참가했냐에 따라서 인자를 따로 전달
+        // ex : 참석 버튼 -> gathering_join(false)
+        function gathering_join(bool_by_button, gathering_title) {
+            let is_cancel = bool_by_button;
+            //title은 카드에서 따올 예정, 지금은 임시
+            let title = gathering_title;
+
+            $.ajax({
+                type: "POST",
+                url: '/gathering_join',
+                data: {
+                    title_give: title,
+                    is_cancel_give: is_cancel
                 },
                 success: function (response) {
                     alert(response["msg"])
@@ -107,6 +132,7 @@
             });
         }
 
+
         /* 9/15 오전 추가 내용_delete_gathering */
         function delete_gethering(title) {
             $.ajax({
@@ -121,6 +147,7 @@
                 }
             });
         }
+
 
         function gathering_infomation() {
             $('#post-box2').empty()
@@ -138,7 +165,8 @@
                         let max_guests = gatherings[i]['max_guests']
                         let location = gatherings[i]['location']
                         let restaurant = gatherings[i]['restaurant']
-                        let temp_html = `<div id="post-box" class="container">
+                        let temp_html = `   <p></p>
+                                            <div id="post-box" class="container">
                                             <div class="box">
                                                 <article class="media">
                                                     <div class="media-left">
@@ -194,7 +222,8 @@
                                             <footer class="modal-card-foot">
                                                 <button class="button is-success">Revise</button>
                                                 <button class="button is-success">Delete</button>
-                                                <button class="button is-success">Join</button>
+                                                <button class="button is-success" onclick="gathering_join(0, '${title}')">Join</button>
+                                                <button class="button is-success" onclick="gathering_join(1, '${title}')"> Cancel Gathering</button>
                                                 <button class="button" onclick='$("#modal-gathering${i}").removeClass("is-active")'>Cancel</button>
                                             </footer>
                                         </div>
@@ -207,26 +236,10 @@
             })
         }
 
-        // 어떤 버튼(참가, 취소)으로 참가했냐에 따라서 인자를 따로 전달
-        // ex : 참석 버튼 -> gathering_join(false)
-        function gathering_join(bool_by_button) {
-            let is_cancel = bool_by_button;
-            //title은 카드에서 따올 예정, 지금은 임시
-            let title = $('#title').val();
 
-            $.ajax({
-                type: "POST",
-                url: '/gathering_join',
-                data: {
-                    title_give: title,
-                    is_cancel_give: is_cancel
-                },
-                success: function (response) {
-                    alert(response["msg"])
-                    window.location.reload()
-                }
-            });
-        }
+
+
+
 
     </script>
 </head>
