@@ -14,7 +14,7 @@ SECRET_KEY = 'SPARTA'
 
 # 각자 로컬에서 돌리고 나중에 꼭 바꿔주세요!!!
 client = MongoClient('localhost', 27017)
-db = client.dbsparta_plus_week4
+db = client.test_db
 
 
 @app.route('/')
@@ -80,7 +80,7 @@ def check_dup():
     # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
 
-@app.route('/gathering_join')
+@app.route('/gathering_join', methods = ['POST'])
 def gathering_join():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -149,8 +149,6 @@ def gathering_join():
 def read_gatherings():
     gatherings = list(db.gatherings.find({}, {'_id': False}))
     return jsonify({'all_gatherings': gatherings})
-
-
 
 @app.route('/api/gathering_create', methods=['POST'])
 def save_gathering():

@@ -29,7 +29,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
-
     <style>
         .title {
             font-weight: 800;
@@ -58,6 +57,7 @@
     <script>
         $(document).ready(function () {
             gathering_infomation();
+
         });
 
         function save_gathering() {
@@ -67,7 +67,7 @@
             let max_guests = $('#max_guests').val()
             let location = $('#location').val()
             let restaurant = $('#restaurant').val()
-
+            console.log(max_guests)
             $.ajax({
                 type: "POST",
                 url: '/api/gathering_create',
@@ -123,7 +123,7 @@
         }
 
         function gathering_infomation() {
-            $('#cards-box').empty()
+            $('#post-box2').empty()
             $.ajax({
                 type: "GET",
                 url: "/gatherings",
@@ -202,7 +202,6 @@
                                                 onclick='$("#modal-gathering${i}").removeClass("is-active")'></button>
                                     </div>`
                         $('#post_box2').append(temp_html)
-
                     }
                 }
             })
@@ -235,8 +234,26 @@
 <h1>모임 생성</h1>
 
 
+<button id="test_button">자세히 보기 예시</button>
+<div class="modal" id="modal-gathering">
 
+    <div class="modal-background" onclick='$("#modal-gathering").removeClass("is-active")'></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">생성된 모임 정보</p>
+            <button class="delete" aria-label="close" onclick='$("#modal-gathering").removeClass("is-active")'></button>
+        </header>
+        <section class="modal-card-body">
 
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Save changes</button>
+            <button class="button" onclick='$("#modal-gathering").removeClass("is-active")'>Cancel</button>
+        </footer>
+    </div>
+    <button class="modal-close is-large" aria-label="close"
+            onclick='$("#modal-gathering").removeClass("is-active")'></button>
+</div>
 
 
 <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
@@ -273,18 +290,15 @@
                 <article class="media">
                     <div class="media-content">
                         <div class="field">
-
                             <div id="gathering_create_box">
                                 <div>제목<input class="input is-small" type="text" id="title" placeholder="모임 제목을 설정해주세요">
                                 </div>
                                 <div>일자 <input class="input is-small" type="date" id="date"></div>
                                 <div>내용 <textarea class="textarea" placeholder="모임 참석 내용" rows="10"
                                                   id="agenda"></textarea></div>
-                                <div>최대인원 <input class="input is-small" type="number" id="max-guest"></div>
+                                <div>최대인원 <input class="input is-small" type="number" id="max_guests"></div>
                                 <div>위치 <input class="input is-small" type="text" id="location"></div>
                                 <div>맛집정보 <input class="input is-small" type="text" id="restaurant"></div>
-
-
                             </div>
                         </div>
                         <nav class="level is-mobile">
@@ -332,14 +346,16 @@
                             <a class="level-item is-sparta" aria-label=""
                                onclick="toggle_like('', 'heart')">
                                 <!--  이 부분변경해서 참석, 참석정원 버튼으로 쓸 예정    -->
-                                        <span class="icon is-small"><i class="fa fa-heart"
-                                                                       aria-hidden="true"></i></span>&nbsp;<span
+                                <span class="icon is-small"><i class="fa fa-heart"
+                                                               aria-hidden="true"></i></span>&nbsp;<span
                                     class="left-num">Left : 03(남은 모임 정원 맵핑)</span>
                             </a>
                             <div class="buttons are-small is-rounded">
-                            <button class="button is-info is-inverted" onclick='$("#modal-gathering").addClass("is-active")'>Info</button>
-                            <button class="button is-success is-inverted">Join</button>
-                            <button class="button is-danger is-inverted">Cancel</button>
+                                <button class="button is-info is-inverted"
+                                        onclick='$("#modal-gathering").addClass("is-active")'>Info
+                                </button>
+                                <button class="button is-success is-inverted">Join</button>
+                                <button class="button is-danger is-inverted">Cancel</button>
                             </div>
                         </div>
 
@@ -349,56 +365,33 @@
         </div>
 
     </div>
-    <div class="modal" id="modal-gathering">
-    <div class="modal-background" onclick='$("#modal-gathering").removeClass("is-active")'></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">모임 타이틀(타이틀 맵핑)</p>
-            <button class="delete" aria-label="close" onclick='$("#modal-gathering").removeClass("is-active")'></button>
-        </header>
-        <section class="modal-card-body">
-            <div class="content">
-                <p>날짜 : (날짜 맵핑)</p>
-                <p>내용 : (내용 맵핑) 이미지 넣거나 카드 꾸미거나 단락 예쁘게 바꾸는건 나중에 합시다</p>
-                <p>인원수 : (최대 인원수 맵핑/잔여 인원)</p>
-                <p>장소 : (장소 맵핑)</p>
-                <p>식당 : (식당 이름 맵핑)</p>
-            </div>
-        </section>
-        <footer class="modal-card-foot">
-            <button class="button is-success">Revise</button>
-            <button class="button is-success">Delete</button>
-            <button class="button is-success">Join</button>
-            <button class="button" onclick='$("#modal-gathering").removeClass("is-active")'>Cancel</button>
-        </footer>
-    </div>
-    <button class="modal-close is-large" aria-label="close"
-            onclick='$("#modal-gathering").removeClass("is-active")'></button>
-</div>
-</section>
-<div class="card">
-    <header class="card-header">
-        <p class="card-header-title">
-            Title
-        </p>
-        <button class="card-header-icon" aria-label="more options">
-      <span class="icon">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-        </button>
-    </header>
-    <div class="card-content">
-        <div class="content">
-            <p>날짜 : </p>
-            <p>내용 : </p>
-            <p>최대인원수 : </p>
-            <p>장소 : </p>
-            <p>식당 : </p>
+    <div class="modal" id="modal-gathering_test" id="card-box">
+        <div class="modal-background" onclick='$("#modal-gathering").removeClass("is-active")'></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">모임 타이틀(타이틀 맵핑)</p>
+                <button class="delete" aria-label="close"
+                        onclick='$("#modal-gathering").removeClass("is-active")'></button>
+            </header>
+            <section class="modal-card-body">
+                <div class="content">
+                    <p>날짜 : (날짜 맵핑)</p>
+                    <p>내용 : (내용 맵핑) 이미지 넣거나 카드 꾸미거나 단락 예쁘게 바꾸는건 나중에 합시다</p>
+                    <p>인원수 : (최대 인원수 맵핑/잔여 인원)</p>
+                    <p>장소 : (장소 맵핑)</p>
+                    <p>식당 : (식당 이름 맵핑)</p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success">Revise</button>
+                <button class="button is-success">Delete</button>
+                <button class="button is-success">Join</button>
+                <button class="button" onclick='$("#modal-gathering").removeClass("is-active")'>Cancel</button>
+            </footer>
         </div>
+        <button class="modal-close is-large" aria-label="close"
+                onclick='$("#modal-gathering").removeClass("is-active")'></button>
     </div>
-    <footer class="card-footer">
-        <a href="#" class="card-footer-item">자세히 보기</a>
-    </footer>
-</div>
+</section>
 </body>
 </html>
