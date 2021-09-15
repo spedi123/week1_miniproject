@@ -176,8 +176,30 @@ def save_gathering():
     return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 개최 완료!'})
 
 
+#update 시 user_id는 필요 없음. => 수정버튼 노출여부 결정 시 판단하면 됨
+#수정버튼 클릭한 카드의 타이틀을 기준으로 db update
+@app.route('/api/update', methods=['POST'])
+def update_gathering():
+    title_receive = request.form['title_give']
+    agenda_receive = request.form['agenda_give']
+    max_guests_receive = request.form['max_guests_give']
+    location_receive = request.form['location_give']
+    restaurant_receive = request.form['restaurant_give']
+
+    db.gatherings.update_one({'title': title_receive},
+                             {'$set': {'agenda': agenda_receive,
+                                       'max_guests': max_guests_receive,
+                                       'location': location_receive,
+                                       'restaurant': restaurant_receive}})
+    return jsonify({'msg': '수정 완료!'})
 
 
+#삭제버튼 클릭한 카드의 타이틀을 기준으로 delete
+@app.route('/api/delete', methods=['POST'])
+def delete_gathering():
+    title_receive = request.form['title_give']
+    db.gatherings.delete_one({'title': title_receive})
+    return jsonify({'msg': '삭제 완료!'})
 
 
 
