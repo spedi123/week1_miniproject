@@ -54,7 +54,9 @@ def endup_view():
     token_receive = request.cookies.get('mytoken')
     try:
         endup_gatherings = list(db.endupgathering.find({}, {'_id': False}))
+
         return render_template('gathering_details.html', endup_gatherings=endup_gatherings)
+
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
 
@@ -267,19 +269,24 @@ def save_gathering():
 #수정버튼 클릭한 카드의 타이틀을 기준으로 db update
 @app.route('/api/update', methods=['POST'])
 def update_gathering():
+    # 수정하고 싶은 모임의 타이틀을 클라이언트로부터 받아오기
     title_receive = request.form['title_give']
+    date_receive = request.form['date_give']
     agenda_receive = request.form['agenda_give']
     max_guests_receive = request.form['max_guests_give']
     location_receive = request.form['location_give']
     restaurant_receive = request.form['restaurant_give']
 
+    # 데이터베이스 업데이트
     db.gatherings.update_one({'title': title_receive},
                              {'$set': {'agenda': agenda_receive,
+                                       'date': date_receive,
                                        'max_guests': max_guests_receive,
                                        'location': location_receive,
                                        'restaurant': restaurant_receive}})
-    return jsonify({'msg': '수정 완료!'})
 
+    # 수정 완료 메세지 띄우기
+    return jsonify({'msg': '수정 완료!'})
 
 #삭제버튼 클릭한 카드의 타이틀을 기준으로 delete
 @app.route('/api/delete', methods=['POST'])

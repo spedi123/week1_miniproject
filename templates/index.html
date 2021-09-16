@@ -59,22 +59,18 @@
         });
 
 
-        function time2str(date) {
-            let today = new Date()
-            let res_time = Date.parse(date)
-
-            let left_time = (res_time - today) / 1000 / 60
-            if (left_time < 60) {
-                return "예약 " + parseInt(left_time) + "분 전"
-            }
-            left_time = left_time/60
-            if (left_time < 24) {
-                return "예약 " + parseInt(left_time) + "시간 전"
-            }
-            left_time = left_time/24
-            return "예약 " + parseInt(left_time) + "일 "
-
+        function redirect_to_endup() {
+            $.ajax({
+                type: "GET",
+                url: '/api/endup_view',
+                data: {},
+                success: function (response) {
+                    alert(response["msg"])
+                window.location.reload()
+                }
+            });
         }
+
         function save_gathering() {
             let title = $('#title').val()
             let date = $('#date').val()
@@ -143,22 +139,27 @@ window.location.reload()
         }
 
         /* 9/15 오전 추가 내용_update_gathering */
-        function update_gethering(title, date, agenda, max_guests, location, restaurant) {
-console.log(title, date, agenda, max_guests, location, restaurant)
+        function update_gethering(title_rev, date_rev, agenda_rev, max_guests_rev, location_rev, restaurant_rev) {
+            {#let date_rev = $('#date_rev').val()#}
+            {#let agenda_rev = $('#agenda_rev').val()#}
+            {#let max_guests_rev = $('#max_guests_rev').val()#}
+            {#let location_rev = $('#location_rev').val()#}
+            {#let restaurant_rev = $('#restaurant_rev').val()#}
+
             $.ajax({
                 type: "POST",
                 url: "/api/update",
                 data: {
-                    title_give: title,
-                    date_give: date,
-                    agenda_give: agenda,
-                    max_guests_give: max_guests,
-                    location_give: location,
-                    restaurant_give: restaurant,
+                    title_give: title_rev,
+                    date_give: date_rev,
+                    agenda_give: agenda_rev,
+                    max_guests_give: max_guests_rev,
+                    location_give: location_rev,
+                    restaurant_give: restaurant_rev
                 },
                 success: function (response) {
                     alert(response["msg"])
-window.location.reload();
+                    window.location.href = '/';
                 }
             });
         }
@@ -181,6 +182,8 @@ window.location.reload();
     </script>
 </head>
 <body class="has-navbar-fixed-top">
+    {#위치 다시 설정#}
+    <button onclick="window.location.href='/api/endup_view'">모임 후기 보기</button>
     <!-- 화면구성 -->
     <nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
@@ -243,7 +246,7 @@ window.location.reload();
                     </section>
                     <footer class="modal-card-foot">
                         {% if userid == gathering.host %}
-                            <button class="button is-success">Revise</button>
+                            <button class="button is-success" onclick='$("#modal-gathering_update{{ loop.index }}").addClass("is-active")'>Revise</button>
                             <button class="button is-success" onclick="delete_gethering('{{ gathering.title }}')">
                                 Delete
                             </button>
@@ -381,4 +384,48 @@ window.location.reload();
     </div>
     {% endfor %}
 {#변경끝 18:13#}
+
+{% for gathering in gatherings|reverse %}
+    <div class="modal" id="modal-gathering_update{{ loop.index }}">
+        <div class="modal-background"
+             onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title" id="title_rev{{ loop.index }}">{{ gathering.title }}</p>
+                <button class="delete" aria-label="close"
+                        onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
+            </header>
+            <section class="modal-card-body">
+                <div class="content" id="modal-gathering_update{{ loop.index }}">
+                    <div>날짜 : <input class="input is-small1" type="date" id="date_rev{{ loop.index }}"
+                                     placeholder="{{ gathering.date }}"></div>
+                        <div>내용 : <input class="input is-small1" type="text" id="agenda_rev{{ loop.index }}"
+                                         placeholder="{{ gathering.agenda }}"></div>
+                            <div>인원수 : <input class="input is-small1" type="number" id="max_guests_rev{{ loop.index }}"
+                                              placeholder="{{ gathering.max_guests }}"></div>
+                                <div>장소 : <input class="input is-small1" type="text" id="location_rev{{ loop.index }}"
+                                                 placeholder="{{ gathering.location }}"></div>
+                                    <div>식당 : <input class="input is-small1" type="text" id="restaurant_rev{{ loop.index }}"
+                                                     placeholder="{{ gathering.restaurant }}"></div>
+                                    </div>
+            </section>
+            <footer class="modal-card-foot">
+                {% if userid == gathering.host %}
+                    <!-- 영준 2021-09-16 오후 10:28 수정 - 시작 -->
+                    <button class="button is-success" onclick="update_gethering('{{gathering.title}}', $('#date_rev{{ loop.index }}').val(),
+                            $('#agenda_rev{{ loop.index }}').val(), $('#max_guests_rev{{ loop.index }}').val(), $('#location_rev{{ loop.index }}').val(),
+                            $('#restaurant_rev{{ loop.index }}').val())">Save</button>
+                    <!-- 영준 2021-09-16 오후 10:28 수정 - 끝 -->
+                {% endif %}
+                <button class="button" onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'>
+                    Cancel
+                </button>
+            </footer>
+        </div>
+        <button class="modal-close is-large" aria-label="close"
+                onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
+    </div>
+{% endfor %}
+
+
 </html>
