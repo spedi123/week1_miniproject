@@ -52,6 +52,13 @@
             // {% if msg %}
                 //    alert("{{ msg }}")
                 // {% endif %}
+            function redirect() {
+                // 앱이 초기화면 들어 올 때
+                // 만약 해당 id로 작성된 모임 title이 있으면
+                // 그 모임 카드에 토글 클래스를 먹임
+                // 같은 위치로 두 가지 버튼을 두고
+                // is-hidden엇갈리게 먹여서 둘중 하나만 표기
+            }
 
             function toggle_sign_up() {
                 $("#sign-up-box").toggleClass("is-hidden")
