@@ -18,6 +18,31 @@ client = MongoClient('localhost', 27017)
 db = client.test_db2
 
 
+@app.route('/api/endup_gathering', methods=['POST'])
+def endup_gathering():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        title_receive = request.form['title_give']
+        star_receive = request.form['star_give']
+        review_receive = request.form['review_give']
+        location_receive = db.gatherings.find_one({'title':title_receive})['location']
+        restaurant_receive = db.gatherings.find_one({'title':title_receive})['restaurant']
+        date_receive = db.gatherings.find_one({'title':title_receive})['date']
+
+        doc = {
+            'title' : title_receive,
+            'date' : date_receive,
+            'star' : star_receive,
+            'review' : review_receive,
+            'location' : location_receive,
+            'restaurant' : restaurant_receive
+        }
+        db.endupgathering.insert_one(doc)
+        return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 종료!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')

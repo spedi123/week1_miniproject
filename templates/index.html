@@ -57,11 +57,7 @@
     <script>
         $(document).ready(function () {
         });
-        function foo(torf, title) {
-console.log(torf);
-console.log(title)
-console.log("why the fuck")
-            }
+
 
         function save_gathering() {
             let title = $('#title').val()
@@ -294,6 +290,37 @@ window.location.reload();
     </div>
 </body>
 
-
+{% for gathering in gatherings|reverse %}
+    <div class="modal" id="modal-gathering_endup{{ loop.index }}">
+        <div class="modal-background"
+             onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">{{ gathering.title }}</p>
+                <button class="delete" aria-label="close"
+                        onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
+            </header>
+            <section class="modal-card-body">
+                <div class="content">
+                    <div>날짜 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.date }}">
+                    <div>내용 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.agenda }}">
+                    <div>인원수 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.max_guests }}">
+                    <div>장소 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.location }}">
+                    <div>식당 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.restaurant }}">
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                {% if userid == gathering.host %}
+                    <button class="button is-success" onclick="update_gethering('{{ gathering.title }}')">Save</button>
+                {% endif %}
+                <button class="button" onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
+                    Cancel
+                </button>
+            </footer>
+        </div>
+        <button class="modal-close is-large" aria-label="close"
+                onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
+    </div>
+    {% endfor %}
 
 </html>
