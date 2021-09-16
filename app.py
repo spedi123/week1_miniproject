@@ -17,7 +17,7 @@ SECRET_KEY = 'SPARTA'
 client = MongoClient('localhost', 27017)
 db = client.test_db2
 
-
+# 변경 시작 18:13
 @app.route('/api/endup_gathering', methods=['POST'])
 def endup_gathering():
     token_receive = request.cookies.get('mytoken')
@@ -29,6 +29,7 @@ def endup_gathering():
         location_receive = db.gatherings.find_one({'title':title_receive})['location']
         restaurant_receive = db.gatherings.find_one({'title':title_receive})['restaurant']
         date_receive = db.gatherings.find_one({'title':title_receive})['date']
+        food_img = db.gatherings.find_one({'title' : title_receive})['food_img']
 
         doc = {
             'title' : title_receive,
@@ -36,12 +37,16 @@ def endup_gathering():
             'star' : star_receive,
             'review' : review_receive,
             'location' : location_receive,
-            'restaurant' : restaurant_receive
+            'restaurant' : restaurant_receive,
+            'food_img': food_img
         }
         db.endupgathering.insert_one(doc)
+        db.gatherings.delete_one({'title' : title_receive})
         return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 종료!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
+#변경 끝 18:13
+
 
 @app.route('/')
 def home():
