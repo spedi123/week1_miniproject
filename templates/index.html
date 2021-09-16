@@ -373,12 +373,15 @@
                     <div class="content">
                         <p>날짜 : {{ gathering.date }}</p>
                         <p>내용 : {{ gathering.agenda }}</p>
+                        {#여기 바뀜_11:51_준규_시작#}
                         <p>인원수 : {{ joind_counter[gathering.title] }} / {{ gathering.max_guests }}</p>
+                        {#여기 바뀜_11:51_준규_끝#}
                         <p>장소 : {{ gathering.location }}</p>
                         <p>식당 : {{ gathering.restaurant }}</p>
                     </div>
                 </section>
                 <footer class="modal-card-foot">
+                    {#여기 바뀜_11:51_준규_시작#}
                     {% if userid == gathering.host %}
                     <button class="button is-success">Revise</button>
                     <button class="button is-success" onclick="delete_gethering('{{ gathering.title }}')">Delete</button>
@@ -388,6 +391,7 @@
                         Gathering
                     </button>
                     {% endif %}
+                    {#여기 바뀜_11:51_준규_끝#}
                     <button class="button" onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'>
                         Cancel
                     </button>
