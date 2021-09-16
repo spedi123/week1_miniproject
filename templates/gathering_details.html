@@ -1,10 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!--쿠키, 토큰 발급용/필요에 따라 수정 할것 -->
+    <!--1. main page와 스타일 맞추기       -->
+    <!--2. 폰트 결정하기        -->
+    <!-- Webpage Title -->
+    <title>Meat up - 맛집을 함께 즐겨요!</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Meat up - 맛집을 함께 즐겨요!"/>
+    <meta property="og:description" content="mini project for Web Plus"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Stylish&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='myjs.js') }}"></script>
+
+    <style>
+        .title {
+            font-weight: 800;
+            font-size: 5rem;
+            font-family: 'Stylish', sans-serif;
+        }
+
+        .subtitle {
+            font-family: 'Gamja Flower', cursive;
+            font-size: 2rem;
+
+        }
+
+        .help {
+            color: gray;
+        }
+    </style>
+
+    <style>
+        .card {
+            width: 500px;
+            height: 400px;
+            margin: auto;
+        }
+    </style>
+    <script>
+
+    </script>
 </head>
-<body>
+
+<body class="has-navbar-fixed-top">
+<!-- 화면구성 -->
+<nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="{{ url_for('static', filename='logo.png') }}">
+            <strong class="is-sparta"
+                    style="font-family: 'Stylish', sans-serif;font-size: larger;">M-EAT-UP</strong>
+        </a>
+    </div>
+</nav>
+
+
+<section class="section" id="post_box2">
+    {% for gathering in gatherings|reverse %}
+        <div id="post-box" class="container">
+            <div class="box">
+                <article class="media">
+                    <div class="media-left">
+                        <div class="media-left">
+                            <a class="image is-64x64" href="#">
+                                <img class="is-rounded"
+                                     src={{ url_for("static", filename="sample.jpg") }} alt="Image">
+                            </a>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>{{ gathering.title }}</strong> <small>@ {{ gathering.location }} D-{ }</small>
+                                <br>
+                                {{ joind_counter[gathering.title] }}/{{ gathering.max_guests }}명
+                            </p>
+                        </div>
+                        <nav class="level is-mobile">
+                            <button class="button is-link is-outlined" id="btn-gathering-detail"
+                                    onclick='$("#modal-gathering{{ loop.index }}").addClass("is-active")'>자세히 보기
+                            </button>
+
+                        </nav>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+    {% endfor %}
+</section>
+
 
 </body>
+
+
+
+
 </html>
+
