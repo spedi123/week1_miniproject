@@ -85,10 +85,10 @@ window.location.reload()
             });
         }
         {#변경 시작 : 18:13#}
-        function endup_gathering(input_title) {
+        function endup_gathering(input_title,input_star,input_review) {
             let title = input_title
-            let star = $('#star').val()
-            let review = $('#review').val()
+            let star = input_star
+            let review = input_review
             $.ajax({
                 type: "POST",
                 url: '/api/endup_gathering',
@@ -331,7 +331,7 @@ window.location.reload();
                         <label class="label">Satisfaction</label>
                         <div class="control">
                             <div class="select is-rounded">
-                                <select id="star">
+                                <select id="star{{ loop.index }}">
                                     <option value="5">👍👍👍👍👍</option>
                                     <option value="4">👍👍👍👍</option>
                                     <option value="3">👍👍👍</option>
@@ -345,14 +345,15 @@ window.location.reload();
                 <div class="field">
                     <label class="label">Review</label>
                     <div class="control">
-                        <textarea class="textarea" placeholder="후기를 입력해 주세요!!" id="review"></textarea>
+                        <textarea class="textarea" placeholder="후기를 입력해 주세요!!" id="review{{ loop.index }}"></textarea>
                     </div>
                 </div>
             </section>
             <footer class="modal-card-foot">
                 {% if userid == gathering.host %}
                     <button class="button is-success"
-                            onclick="endup_gathering('{{ gathering.title }}')" >Save</button>
+                            onclick="endup_gathering('{{ gathering.title }}',$('#star{{ loop.index }}').val(),
+                                    $('#review{{ loop.index }}').val())" >Save</button>
                 {% endif %}
                 <button class="button" onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
                     Cancel
