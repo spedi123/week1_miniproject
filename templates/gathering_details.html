@@ -45,15 +45,23 @@
         .help {
             color: gray;
         }
-    </style>
-
-    <style>
         .card {
             width: 500px;
             height: 400px;
             margin: auto;
         }
+
+        .section .container .box{
+            background-color: antiquewhite;
+            margin-bottom: 5px;
+        }
+
+        hr.dl{
+            border: thin solid grey;
+        }
+
     </style>
+
     <script>
 
     </script>
@@ -71,48 +79,39 @@
     </div>
 </nav>
 
-
 <section class="section" id="post_box2">
-    {% for gathering in gatherings|reverse %}
-        <div id="post-box" class="container">
+    {% for endup_gathering in endup_gatherings|reverse %}
+        <div class="container">
             <div class="box">
                 <article class="media">
                     <div class="media-left">
                         <div class="media-left">
-                            <a class="image is-64x64" href="#">
+                            <div class="image is-64x64">
+                                {#img 소스 적용#}
                                 <img class="is-rounded"
-                                     src={{ url_for("static", filename="sample.jpg") }} alt="Image">
-                            </a>
+                                     src="{{ endup_gathering.food_img }}" alt="Image">
+                            </div>
                         </div>
-                        </a>
                     </div>
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <strong>{{ gathering.title }}</strong> <small>@ {{ gathering.location }} D-{ }</small>
+                                <strong>{{ endup_gathering.title }}</strong> <small>@ {{ endup_gathering.location }} D-{
+                                }</small>
                                 <br>
-                                {{ joind_counter[gathering.title] }}/{{ gathering.max_guests }}명
+                            <b>모임일자</b> : {{ endup_gathering.date }}<br>
+                            <b>장소</b> : {{ endup_gathering.location }}<br>
+                            <b>맛집</b> : {{ endup_gathering.restaurant }}<br>
+                            <hr class = 'dl'>
+                            <b>따봉</b> : {{ endup_gathering.star }}<br>
+                            <b>후기</b> : {{ endup_gathering.review }}
                             </p>
                         </div>
-                        <nav class="level is-mobile">
-                            <button class="button is-link is-outlined" id="btn-gathering-detail"
-                                    onclick='$("#modal-gathering{{ loop.index }}").addClass("is-active")'>자세히 보기
-                            </button>
-
-                        </nav>
                     </div>
                 </article>
             </div>
         </div>
-
     {% endfor %}
 </section>
-
-
 </body>
-
-
-
-
 </html>
-

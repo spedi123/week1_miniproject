@@ -84,6 +84,28 @@ window.location.reload()
                 }
             });
         }
+        {#변경 시작 : 18:13#}
+        function endup_gathering(input_title) {
+            let title = input_title
+            let star = $('#star').val()
+            let review = $('#review').val()
+            $.ajax({
+                type: "POST",
+                url: '/api/endup_gathering',
+                data: {
+                    title_give: title,
+                    star_give: star,
+                    review_give: review
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+        {#변경 끝 : 18:13#}
+
         // 어떤 버튼(참가, 취소)으로 참가했냐에 따라서 인자를 따로 전달
         // ex : 참석 버튼 -> gathering_join(false)
         function gathering_join(bool_by_button, gathering_title) {
@@ -210,6 +232,9 @@ window.location.reload();
                             <button class="button is-success" onclick="delete_gethering('{{ gathering.title }}')">
                                 Delete
                             </button>
+                            {#변경 시작 : 18:13#}
+                            <button class="button is-success" onclick='$("#modal-gathering_endup{{ loop.index }}").addClass("is-active")'>End Up Gathering</button>
+                            {#변경 끝 : 18:13#}
                         {% else %}
                             <button class="button is-success" onclick="gathering_join(0, '{{ gathering.title }}')">
                                 Join
@@ -290,6 +315,7 @@ window.location.reload();
     </div>
 </body>
 
+{#변경시작_18:13#}
 {% for gathering in gatherings|reverse %}
     <div class="modal" id="modal-gathering_endup{{ loop.index }}">
         <div class="modal-background"
@@ -302,16 +328,32 @@ window.location.reload();
             </header>
             <section class="modal-card-body">
                 <div class="content">
-                    <div>날짜 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.date }}">
-                    <div>내용 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.agenda }}">
-                    <div>인원수 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.max_guests }}">
-                    <div>장소 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.location }}">
-                    <div>식당 : <input class="input is-small1" type="text" id="title" placeholder="{{ gathering.restaurant }}">
+                    <div class="field">
+                        <label class="label">Satisfaction</label>
+                        <div class="control">
+                            <div class="select is-rounded">
+                                <select id="star">
+                                    <option value="5">👍👍👍👍👍</option>
+                                    <option value="4">👍👍👍👍</option>
+                                    <option value="3">👍👍👍</option>
+                                    <option value="2">👍👍</option>
+                                    <option value="1">👍</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Review</label>
+                    <div class="control">
+                        <textarea class="textarea" placeholder="후기를 입력해 주세요!!" id="review"></textarea>
+                    </div>
                 </div>
             </section>
             <footer class="modal-card-foot">
                 {% if userid == gathering.host %}
-                    <button class="button is-success" onclick="update_gethering('{{ gathering.title }}')">Save</button>
+                    <button class="button is-success"
+                            onclick="endup_gathering('{{ gathering.title }}')" >Save</button>
                 {% endif %}
                 <button class="button" onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
                     Cancel
@@ -322,5 +364,5 @@ window.location.reload();
                 onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
     </div>
     {% endfor %}
-
+{#변경끝 18:13#}
 </html>
