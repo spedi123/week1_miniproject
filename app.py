@@ -104,7 +104,7 @@ def sign_in():
     if result is not None:
         payload = {
          'id': id_receive,
-         'exp': datetime.utcnow() + timedelta(seconds= 60 * 3)
+         'exp': datetime.utcnow() + timedelta(seconds= 60 * 3 * 60)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 

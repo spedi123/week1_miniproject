@@ -63,11 +63,17 @@
     </style>
 
     <script>
+        function sign_out() {
+                $.removeCookie('mytoken', {path: '/'});
+                alert('로그아웃!')
+                window.location.href = "/login"
+            }
 
     </script>
 </head>
 
 <body class="has-navbar-fixed-top">
+<button onclick="sign_out()">로그아웃</button>
 <!-- 화면구성 -->
 <nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">

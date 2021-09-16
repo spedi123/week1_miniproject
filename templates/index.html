@@ -57,7 +57,11 @@
     <script>
         $(document).ready(function () {
         });
-
+        function sign_out() {
+                $.removeCookie('mytoken', {path: '/'});
+                alert('로그아웃!')
+                window.location.href = "/login"
+            }
 
         function redirect_to_endup() {
             $.ajax({
@@ -184,6 +188,7 @@ window.location.reload();
 <body class="has-navbar-fixed-top">
     {#위치 다시 설정#}
     <button onclick="window.location.href='/api/endup_view'">모임 후기 보기</button>
+    <button onclick="sign_out()">로그아웃</button>
     <!-- 화면구성 -->
     <nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
