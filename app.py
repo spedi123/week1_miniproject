@@ -23,7 +23,9 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"id": payload["id"]})
-        return render_template('index.html', user_info=user_info)
+        gatherings = list(db.gatherings.find({}, {'_id': False}))
+        print(gatherings)
+        return render_template('index.html', user_info=user_info, gatherings=gatherings)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -49,7 +51,7 @@ def sign_in():
     if result is not None:
         payload = {
          'id': id_receive,
-         'exp': datetime.utcnow() + timedelta(seconds= 60 * 5 * 60)
+         'exp': datetime.utcnow() + timedelta(seconds= 60 * 3)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
@@ -152,10 +154,10 @@ def gathering_join():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-@app.route('/gatherings', methods=['GET'])
-def read_gatherings():
-    gatherings = list(db.gatherings.find({}, {'_id': False}))
-    return jsonify({'all_gatherings': gatherings})
+# @app.route('/gatherings', methods=['GET'])
+# def read_gatherings():
+#     gatherings = list(db.gatherings.find({}, {'_id': False}))
+#     return jsonify({'all_gatherings': gatherings})
 
 @app.route('/api/gathering_create', methods=['POST'])
 def save_gathering():
