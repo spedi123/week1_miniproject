@@ -28,7 +28,9 @@ def home():
         # 모임 잔여인원 구하기
         joind_counter = {}
         for gathering in gatherings:
+            # 변경 12:44 - 잔여인원수로 변경함
             joind_counter[gathering['title']] = db.gathering_data.count({'title' : gathering['title']}) + 1
+            # 변경 12:44 - 변경 끝
         print(gatherings)
         print(joind_counter)
         # 이래도 보안 문제 없을까?
@@ -122,8 +124,10 @@ def gathering_join():
             return jsonify({'result' : 'success', "msg" : "모임 참석 취소 완료!"})
 
 
-        # 참석 요청 전 예외처리
+        # 참석 요청 전 예외처리끝
+        #변경-12:44 예외처리 다시 함
         if max_guests <= joined_guests + 1:
+            # 변경끝-12:44
             return jsonify({'result': 'success', "msg" : "모임 정원이 가득 찼습니다."})
 
         # gatherings db에서 새로 요청한 모임명 찾음, 그리고 시간값 받아와서 변수에 저장
