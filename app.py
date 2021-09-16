@@ -14,7 +14,7 @@ SECRET_KEY = 'SPARTA'
 
 # 각자 로컬에서 돌리고 나중에 꼭 바꿔주세요!!!
 client = MongoClient('localhost', 27017)
-db = client.test_db
+db = client.test_db2
 
 
 @app.route('/')
@@ -23,9 +23,16 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"id": payload["id"]})
+        userid = payload["id"]
         gatherings = list(db.gatherings.find({}, {'_id': False}))
+        # 모임 잔여인원 구하기
+        joind_counter = {}
+        for gathering in gatherings:
+            joind_counter[gathering['title']] = int(gathering['max_guests']) - db.gathering_data.count({'title' : gathering['title']}) -1
         print(gatherings)
-        return render_template('index.html', user_info=user_info, gatherings=gatherings)
+        print(joind_counter)
+        # 이래도 보안 문제 없을까?
+        return render_template('index.html', userid=userid, user_info=user_info, gatherings=gatherings, joind_counter = joind_counter)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -91,18 +98,18 @@ def gathering_join():
         user_info = db.users.find_one({"id": payload["id"]})
 
         # 이미 참석하기로 한 모임 리스트, request로 넘겨받은 모임 title 저장
-        # str split(',')로 구현 할 예정이라 title에는 ,사용 금지 제약 걸어야
         attended_receive = user_info["attended"]
 
 
         title_receive = request.form["title_give"]
-
+        max_guests = int(db.gatherings.find_one({"title":title_receive})['max_guests'])
+        joined_guests = int(db.gathering_data.count({"title" : title_receive}))
         # 토글로 구현, bool값을 request로 전달해서 구분 - 삭제 요청인지 취소 요청인지
         cancel_receive = request.form["is_cancel_give"]
         is_cancel = int(cancel_receive)
 
 
-        # 삭제 요청시(조건문 필요 없음)
+        # 삭제 요청시
         if is_cancel == 1:
             if title_receive in attended_receive:
                 attended_receive.remove(title_receive)
@@ -115,6 +122,10 @@ def gathering_join():
             return jsonify({'result' : 'success', "msg" : "모임 참석 취소 완료!"})
 
 
+        # 참석 요청 전 예외처리
+        if max_guests <= joined_guests :
+            return jsonify({'result': 'success', "msg" : "모임 정원이 가득 찼습니다."})
+
         # gatherings db에서 새로 요청한 모임명 찾음, 그리고 시간값 받아와서 변수에 저장
         new_appointment_time = db.gatherings.find_one({"title": title_receive})["date"]
 
@@ -123,6 +134,7 @@ def gathering_join():
         already_attended_time = []
         print(len(attended_receive))
         if len(attended_receive) == 0:
+
             attended_receive.append(title_receive)
             db.users.update_one({'id': payload["id"]}, {'$set': {'attended': attended_receive}})
             doc = {
@@ -161,26 +173,33 @@ def gathering_join():
 
 @app.route('/api/gathering_create', methods=['POST'])
 def save_gathering():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        host_receive = payload["id"]
+        # 모임 저장하기
+        title_receive = request.form['title_give']
+        date_receive = request.form['date_give']
+        agenda_receive = request.form['agenda_give']
+        max_guests_receive = request.form['max_guests_give']
+        location_receive = request.form['location_give']
+        restaurant_receive = request.form['restaurant_give']
+        host_receive = payload["id"]
 
-    # 모임 저장하기
-    title_receive = request.form['title_give']
-    date_receive = request.form['date_give']
-    agenda_receive = request.form['agenda_give']
-    max_guests_receive = request.form['max_guests_give']
-    location_receive = request.form['location_give']
-    restaurant_receive = request.form['restaurant_give']
+        doc = {
+            'title' : title_receive,
+            'date' : date_receive,
+            'agenda': agenda_receive,
+            'max_guests': max_guests_receive,
+            'location': location_receive,
+            'restaurant': restaurant_receive,
+            'host' : host_receive
+        }
 
-    doc = {
-        'title' : title_receive,
-        'date' : date_receive,
-        'agenda': agenda_receive,
-        'max_guests': max_guests_receive,
-        'location': location_receive,
-        'restaurant': restaurant_receive,
-    }
-
-    db.gatherings.insert_one(doc)
-    return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 개최 완료!'})
+        db.gatherings.insert_one(doc)
+        return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 개최 완료!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 
 #update 시 user_id는 필요 없음. => 수정버튼 노출여부 결정 시 판단하면 됨
