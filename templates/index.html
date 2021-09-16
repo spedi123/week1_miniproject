@@ -59,6 +59,22 @@
         });
 
 
+        function time2str(date) {
+            let today = new Date()
+            let res_time = Date.parse(date)
+
+            let left_time = (res_time - today) / 1000 / 60
+            if (left_time < 60) {
+                return "예약 " + parseInt(left_time) + "분 전"
+            }
+            left_time = left_time/60
+            if (left_time < 24) {
+                return "예약 " + parseInt(left_time) + "시간 전"
+            }
+            left_time = left_time/24
+            return "예약 " + parseInt(left_time) + "일 "
+
+        }
         function save_gathering() {
             let title = $('#title').val()
             let date = $('#date').val()
@@ -194,7 +210,7 @@ window.location.reload();
                         <div class="media-content">
                             <div class="content">
                                 <p>
-                                    <strong>{{ gathering.title }}</strong> <small>@ {{ gathering.location }} D-{ }</small>
+                                    <strong>{{ gathering.title }}</strong> <small>@{{ gathering.location }} / 예약 일자 : {{ gathering.date }}</small>
                                     <br>
                                     {{ joind_counter[gathering.title] }}/{{ gathering.max_guests }}명
                                 </p>
