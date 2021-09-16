@@ -403,15 +403,15 @@ window.location.reload();
             <section class="modal-card-body">
                 <div class="content" id="modal-gathering_update{{ loop.index }}">
                     <div>날짜 : <input class="input is-small1" type="date" id="date_rev{{ loop.index }}"
-                                     placeholder="{{ gathering.date }}"></div>
+                                    value="{{ gathering.date }}"></div>
                         <div>내용 : <input class="input is-small1" type="text" id="agenda_rev{{ loop.index }}"
-                                         placeholder="{{ gathering.agenda }}"></div>
+                                         value="{{ gathering.agenda }}"></div>
                             <div>인원수 : <input class="input is-small1" type="number" id="max_guests_rev{{ loop.index }}"
-                                              placeholder="{{ gathering.max_guests }}"></div>
+                                              value="{{ gathering.max_guests }}"></div>
                                 <div>장소 : <input class="input is-small1" type="text" id="location_rev{{ loop.index }}"
-                                                 placeholder="{{ gathering.location }}"></div>
+                                                 value="{{ gathering.location }}"></div>
                                     <div>식당 : <input class="input is-small1" type="text" id="restaurant_rev{{ loop.index }}"
-                                                     placeholder="{{ gathering.restaurant }}"></div>
+                                                     value="{{ gathering.restaurant }}"></div>
                                     </div>
             </section>
             <footer class="modal-card-foot">
