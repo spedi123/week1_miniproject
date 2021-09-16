@@ -48,6 +48,17 @@ def endup_gathering():
 #변경 끝 18:13
 
 
+#endup 조회APi
+@app.route('/api/endup_view')
+def endup_view():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        endup_gatherings = list(db.endupgathering.find({}, {'_id': False}))
+        return render_template('gathering_details.html', endup_gatherings=endup_gatherings)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+
+
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
