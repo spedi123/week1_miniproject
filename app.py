@@ -5,7 +5,8 @@ import hashlib
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
-
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -190,6 +191,21 @@ def save_gathering():
         restaurant_receive = request.form['restaurant_give']
         host_receive = payload["id"]
 
+        # 9/16. 15:23 restaurant_receive 값 기준으로, 널이면 기본이미지 출력
+        if restaurant_receive == '':
+            food_img = '../static/sample_img.png'
+            print(food_img)
+
+        else:
+            url = 'https://www.mangoplate.com/search/' + restaurant_receive
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+            data = requests.get(url, headers=headers)
+            soup = BeautifulSoup(data.text, 'html.parser')
+            food_img = soup.select_one(
+                'body > main > article > div.column-wrapper > div > div > section > div.search-list-restaurants-inner-wrap > ul > li:nth-child(1) > div:nth-child(1) > figure > a > div > img')[
+                'data-original']
+
         doc = {
             'title' : title_receive,
             'date' : date_receive,
@@ -197,36 +213,12 @@ def save_gathering():
             'max_guests': max_guests_receive,
             'location': location_receive,
             'restaurant': restaurant_receive,
-            'host' : host_receive
+            'host' : host_receive,
+            'food_img': food_img
         }
 
         db.gatherings.insert_one(doc)
         return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 개최 완료!'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
-
-@app.route('/api/endup_gathering', methods=['POST'])
-def endup_gathering():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        title_receive = request.form['title_give']
-        star_receive = request.form['star_give']
-        review_receive = request.form['review_give']
-        location_receive = db.gatherings.find_one({'title':title_receive})['location']
-        restaurant_receive = db.gatherings.find_one({'title':title_receive})['restaurant']
-        date_receive = db.gatherings.find_one({'title':title_receive})['date']
-
-        doc = {
-            'title' : title_receive,
-            'date' : date_receive,
-            'star' : star_receive,
-            'review' : review_receive,
-            'location' : location_receive,
-            'restaurant' : restaurant_receive
-        }
-        db.endupgathering.insert_one(doc)
-        return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 종료!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
