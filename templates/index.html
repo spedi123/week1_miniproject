@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Webpage Title -->
-    <title>MEAT-UP - 맛집을 함께 즐겨요!</title>
+    <!-- Favicon -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
+
+    <!-- og:properties -->
     <meta property="og:title" content="MEAT-UP"/>
     <meta property="og:description" content="맛집을 함께 즐겨요!"/>
     <meta property="og:image" content="{{ url_for('static', filename='og_img.jpg') }}"/>
+
+    <!-- Webpage Title -->
+    <title>MEAT-UP - 맛집을 함께 즐겨요!</title>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Stylish&display=swap" rel="stylesheet">
     <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
@@ -32,35 +37,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&family=Sunflower:wght@500&display=swap"
           rel="stylesheet">
 
-    <style>
-        .title {
-            font-weight: 800;
-            font-size: 5rem;
-            font-family: 'Stylish', sans-serif;
-        }
-
-        .subtitle {
-            font-family: 'Gamja Flower', cursive;
-            font-size: 2rem;
-
-        }
-
-        .help {
-            color: gray;
-        }
-    </style>
-
-    <style>
-        .card {
-            width: 500px;
-            height: 400px;
-            margin: auto;
-        }
-    </style>
     <script>
-        $(document).ready(function () {
-        });
-
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
@@ -115,8 +92,6 @@
             });
         }
 
-        {#변경 시작 : 18:13#}
-
         function endup_gathering(input_title, input_star, input_review) {
             let title = input_title
             let star = input_star
@@ -136,7 +111,6 @@
             });
         }
 
-        {#변경 끝 : 18:13#}
         // 어떤 버튼(참가, 취소)으로 참가했냐에 따라서 인자를 따로 전달
         // ex : 참석 버튼 -> gathering_join(false)
         function gathering_join(bool_by_button, gathering_title) {
@@ -158,13 +132,7 @@
             });
         }
 
-        /* 9/15 오전 추가 내용_update_gathering */
         function update_gethering(title_rev, date_rev, agenda_rev, max_guests_rev, location_rev) {
-            {#let date_rev = $('#date_rev').val()#}
-            {#let agenda_rev = $('#agenda_rev').val()#}
-            {#let max_guests_rev = $('#max_guests_rev').val()#}
-            {#let location_rev = $('#location_rev').val()#}
-            {#let restaurant_rev = $('#restaurant_rev').val()#}
 
             let max_guests_new = max_guests_rev
 
@@ -191,7 +159,6 @@
             });
         }
 
-        /* 9/15 오전 추가 내용_delete_gathering */
         function delete_gethering(title) {
             $.ajax({
                 type: "POST",
@@ -205,148 +172,147 @@
                 }
             });
         }
-
     </script>
 </head>
+
 <body class="has-navbar-fixed-top">
-{#위치 다시 설정#}
+    <!--화면 상단 네비게이션 바-->
+    <nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <img src="{{ url_for('static', filename='logo.png') }}">
+                <strong class="is-sparta"style="font-family: 'Stylish', sans-serif;font-size: larger;">&nbsp;MEAT-UP</strong>
+            </a>
+        </div>
+        <div id="btns-navbar">
+            <button class="button is-success is-inverted" id="btn-navbar" onclick="window.location.href='/api/endup_view'">
+                모임 후기 보기
+            </button>
+            <button class="button is-success is-inverted" id="btn-navbar" onclick="sign_out()">로그아웃</button>
+        </div>
+    </nav>
 
-<!-- 화면구성 -->
-<nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-            <img src="{{ url_for('static', filename='logo.png') }}">
-            <strong class="is-sparta"
-                    style="font-family: 'Stylish', sans-serif;font-size: larger;">&nbsp;MEAT-UP</strong>
-        </a>
-    </div>
-    <div id="btns-navbar">
-        <button class="button is-success is-inverted" id="btn-navbar" onclick="window.location.href='/api/endup_view'">
-            모임 후기 보기
-        </button>
-        <button class="button is-success is-inverted" id="btn-navbar" onclick="sign_out()">로그아웃</button>
-    </div>
+    <!--본문 상단 버튼-->
+    <button class="button is-large" id="btn-create-gathering" onclick='$("#modal-post").addClass("is-active")'>모임 만들기
+    </button>
 
-</nav>
-<button class="button is-large" id="btn-create-gathering" onclick='$("#modal-post").addClass("is-active")'>모임 만들기
-</button>
-<section class="section" id="post_box2">
-    {% for gathering in gatherings|reverse %}
-        <div id="post-box" class="container">
-            <div class="box">
-                <article class="media">
-                    <div class="media-left">
+    <!--본문 카드 리스트-->
+    <section class="section" id="post_box2">
+        <!--본문 카드 그리기-->
+        {% for gathering in gatherings|reverse %}
+            <div id="post-box" class="container">
+                <div class="box">
+                    <article class="media">
                         <div class="media-left">
                             <div class="image is-64x64">
-                                {#img 소스 적용#}
+                                <!--img 소스 적용-->
                                 <img class="is-rounded"
                                      src="{{ gathering.food_img }}" alt="Image">
                             </div>
                         </div>
-                        </a>
-                    </div>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <strong>{{ gathering.title }}</strong> <small>@{{ gathering.location }} / 예약 일자
-                                : {{ gathering.date }}</small>
-                                <br>
-                                {{ joind_counter[gathering.title] }}/{{ gathering.max_guests }}명
-                            </p>
-                        </div>
-                        <nav class="level is-mobile">
-                            <button class="button is-link" id="btn-gathering-detail"
-                                    onclick='$("#modal-gathering{{ loop.index }}").addClass("is-active")'>자세히 보기
-                            </button>
-                        </nav>
-                    </div>
-                </article>
-            </div>
-        </div>
-        <div class="modal" id="modal-gathering{{ loop.index }}">
-            <div class="modal-background"
-                 onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">{{ gathering.title }}</p>
-                    <button class="delete" aria-label="close"
-                            onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'></button>
-                </header>
-                <section class="modal-card-body">
-                    <div class="content">
-                        <p>날짜 : {{ gathering.date }}</p>
-                        <p>내용 : {{ gathering.agenda }}</p>
-                        <p>인원수 : {{ joind_counter[gathering.title] }} / {{ gathering.max_guests }}</p>
-                        <p>장소 : {{ gathering.location }}</p>
-                        <p>식당(음식) : {{ gathering.restaurant }}</p>
-                    </div>
-                </section>
-                <footer class="modal-card-foot">
-                    {% if userid == gathering.host %}
-                        <button class="button is-success" id="btn-modal-gathering"
-                                onclick='$("#modal-gathering_update{{ loop.index }}").addClass("is-active")'>수정
-                        </button>
-                        <button class="button is-success" id="btn-modal-gathering"
-                                onclick="delete_gethering('{{ gathering.title }}')">
-                            삭제
-                        </button>
-                        {#변경 시작 : 18:13#}
-                        <button class="button is-success" id="btn-modal-gathering"
-                                onclick='$("#modal-gathering_endup{{ loop.index }}").addClass("is-active")'>후기 작성
-                        </button>
-                        {#변경 끝 : 18:13#}
-                    {% else %}
-                        <button class="button is-success" id="btn-modal-gathering"
-                                onclick="gathering_join(0, '{{ gathering.title }}')">
-                            참석 신청
-                        </button>
-                        <button class="button is-success" id="btn-modal-gathering"
-                                onclick="gathering_join(1, '{{ gathering.title }}')">
-                            참석 취소
-                        </button>
-                    {% endif %}
-                    <button class="button" id="btn-cancel"
-                            onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'>
-                        돌아가기
-                    </button>
-                </footer>
-            </div>
-            <button class="modal-close is-large" aria-label="close"
-                    onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'></button>
-        </div>
-    {% endfor %}
-</section>
-
-<!--modal 모음 -->
-<div class="modal" id="modal-post">
-    <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
-    <div class="modal-content">
-        <div class="box">
-            <article class="media">
-                <div class="media-content">
-                    <div class="field">
-                        <div id="gathering_create_box">
-                            <div>제목<input class="input is-small" type="text" id="title" placeholder="모임 제목은 필수입니다.">
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong>{{ gathering.title }}</strong> <small>@{{ gathering.location }} / 예약 일자
+                                    : {{ gathering.date }}</small>
+                                    <br>
+                                    {{ joind_counter[gathering.title] }}/{{ gathering.max_guests }}명
+                                </p>
                             </div>
-                            <br>
-                            <div>일자 <input class="input is-small" type="date" id="date"></div>
-                            <br>
-                            <div>설명 <textarea class="textarea is-small" placeholder="모임 주제 및 계획을 입력하세요." rows="10"
-                                              id="agenda"></textarea></div>
-                            <br>
-                            <div>최대인원 <input class="input is-small" type="number" id="max_guests" placeholder="최대인원은 '2인 이상' 입력하세요."></div>
-                            <br>
-                            <div>장소 <input class="input is-small" type="text" id="location" placeholder="모일 위치를 입력하세요."></div>
-                            <br>
-                            <div>식당(음식) <input class="input is-small" type="text" id="restaurant" placeholder="방문할 '음식점' 또는 '음식종류'를 입력하세요."></div>
-                            <br>
+                            <nav class="level is-mobile">
+                                <button class="button is-link" id="btn-gathering-detail"
+                                        onclick='$("#modal-gathering{{ loop.index }}").addClass("is-active")'>자세히 보기
+                                </button>
+                            </nav>
                         </div>
-                    </div>
-                    <nav class="level is-mobile">
-                        <div class="level-left">
+                    </article>
+                </div>
+            </div>
 
+            <!--자세히보기 클릭 시 열리는 모달 카드 그리기-->
+            <div class="modal" id="modal-gathering{{ loop.index }}">
+                <div class="modal-background"
+                     onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'>
+                </div>
+
+                <!--모달 본문-->
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">{{ gathering.title }}</p>
+                        <button class="delete" aria-label="close"
+                                onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'>
+                        </button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="content">
+                            <p>날짜 : {{ gathering.date }}</p>
+                            <p>내용 : {{ gathering.agenda }}</p>
+                            <p>인원수 : {{ joind_counter[gathering.title] }} / {{ gathering.max_guests }}</p>
+                            <p>장소 : {{ gathering.location }}</p>
+                            <p>식당(음식) : {{ gathering.restaurant }}</p>
                         </div>
-                        <div class="level-right">
+                    </section>
+
+                    <!--모달 푸터-->
+                    <footer class="modal-card-foot">
+                        <!--로그인 한 계정과 게시글 생성 계정 일치 여부에 따라 분기-->
+                        {% if userid == gathering.host %}
+                            <button class="button is-success" id="btn-modal-gathering"
+                                    onclick='$("#modal-gathering_update{{ loop.index }}").addClass("is-active")'>수정
+                            </button>
+                            <button class="button is-success" id="btn-modal-gathering"
+                                    onclick="delete_gethering('{{ gathering.title }}')">
+                                삭제
+                            </button>
+                            <button class="button is-success" id="btn-modal-gathering"
+                                    onclick='$("#modal-gathering_endup{{ loop.index }}").addClass("is-active")'>후기 작성
+                            </button>
+                        {% else %}
+                            <button class="button is-success" id="btn-modal-gathering"
+                                    onclick="gathering_join(0, '{{ gathering.title }}')">
+                                참석 신청
+                            </button>
+                            <button class="button is-success" id="btn-modal-gathering"
+                                    onclick="gathering_join(1, '{{ gathering.title }}')">
+                                참석 취소
+                            </button>
+                        {% endif %}
+                        <button class="button" id="btn-cancel"
+                                onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'>
+                            돌아가기
+                        </button>
+                    </footer>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+
+    <!--모임만들기 입력화면-->
+    <div class="modal" id="modal-post">
+        <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+        <div class="modal-content">
+            <div class="box">
+                <article class="media">
+                    <div class="media-content">
+                        <!--모임 생성 입력필드-->
+                        <div class="field">
+                            <div id="gathering_create_box">
+                                <div>제목<input class="input is-small" type="text" id="title" placeholder="모임 제목은 필수입니다."></div>
+                                <br>
+                                <div>일자 <input class="input is-small" type="date" id="date"></div>
+                                <br>
+                                <div>설명 <textarea class="textarea is-small" placeholder="모임 주제 및 계획을 입력하세요." rows="10" id="agenda"></textarea></div>
+                                <br>
+                                <div>최대인원 <input class="input is-small" type="number" id="max_guests" placeholder="최대인원은 '2인 이상' 입력하세요."></div>
+                                <br>
+                                <div>장소 <input class="input is-small" type="text" id="location" placeholder="모일 위치를 입력하세요."></div>
+                                <br>
+                                <div>식당(음식) <input class="input is-small" type="text" id="restaurant" placeholder="방문할 '음식점' 또는 '음식종류'를 입력하세요."></div>
+                                <br>
+                            </div>
+                        </div>
+                        <!--모임 생성 푸터-->
+                        <nav class="level is-mobile">
                             <div class="level-item">
                                 <button class="button is-success" id="btn-modal-gathering" onclick="save_gathering()">
                                     저장
@@ -357,128 +323,113 @@
                                         onclick='$("#modal-post").removeClass("is-active")'>취소
                                 </button>
                             </div>
-                        </div>
-                    </nav>
-                </div>
-            </article>
+                        </nav>
+                    </div>
+                </article>
+            </div>
         </div>
     </div>
-    <button class="modal-close is-large" aria-label="close"
-            onclick='$("#modal-post").removeClass("is-active")'></button>
-</div>
-<div class="modal" id="modal-gathering">
-    <div class="modal-background" onclick='$("#modal-gathering").removeClass("is-active")'></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">생성된 모임 정보</p>
-            <button class="delete" aria-label="close" onclick='$("#modal-gathering").removeClass("is-active")'></button>
-        </header>
-        <section class="modal-card-body">
 
-        </section>
-        <footer class="modal-card-foot">
-            <button class="button is-success">Save changes</button>
-            <button class="button" onclick='$("#modal-gathering").removeClass("is-active")'>Cancel</button>
-        </footer>
-    </div>
-    <button class="modal-close is-large" aria-label="close"
-            onclick='$("#modal-gathering").removeClass("is-active")'></button>
-</div>
-{% for gathering in gatherings|reverse %}
-    <div class="modal" id="modal-gathering_endup{{ loop.index }}">
-        <div class="modal-background"
-             onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">{{ gathering.title }}</p>
-                <button class="delete" aria-label="close"
-                        onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="content">
-                    <div class="field">
-                        <label class="label">만족도</label>
-                        <div class="control">
-                            <div class="select is-rounded">
-                                <select id="star{{ loop.index }}">
-                                    <option value="5">👍👍👍👍👍</option>
-                                    <option value="4">👍👍👍👍</option>
-                                    <option value="3">👍👍👍</option>
-                                    <option value="2">👍👍</option>
-                                    <option value="1">👍</option>
-                                </select>
+    <!--모임후기 생성-->
+    {% for gathering in gatherings|reverse %}
+        <div class="modal" id="modal-gathering_endup{{ loop.index }}">
+            <div class="modal-background"
+                 onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
+            </div>
+            <div class="modal-card">
+                <!--모임후 상단-->
+                <header class="modal-card-head">
+                    <p class="modal-card-title">{{ gathering.title }}</p>
+                    <button class="delete" aria-label="close"
+                            onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
+                    </button>
+                </header>
+                <!--모임후기 입력필드-->
+                <section class="modal-card-body">
+                    <div class="content">
+                        <div class="field">
+                            <label class="label">만족도</label>
+                            <div class="control">
+                                <div class="select is-rounded">
+                                    <select id="star{{ loop.index }}">
+                                        <option value="5">👍👍👍👍👍</option>
+                                        <option value="4">👍👍👍👍</option>
+                                        <option value="3">👍👍👍</option>
+                                        <option value="2">👍👍</option>
+                                        <option value="1">👍</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">후기</label>
-                    <div class="control">
-                        <textarea class="textarea is-small" placeholder="후기를 입력해 주세요!"
-                                  id="review{{ loop.index }}"></textarea>
+                    <div class="field">
+                        <label class="label">후기</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="후기를 입력해 주세요!"
+                                      id="review{{ loop.index }}"></textarea>
+                        </div>
                     </div>
-                </div>
-            </section>
-            <footer class="modal-card-foot">
-                {% if userid == gathering.host %}
-                    <button class="button is-success" id="btn-modal-gathering"
-                            onclick="endup_gathering('{{ gathering.title }}',$('#star{{ loop.index }}').val(),
-                                    $('#review{{ loop.index }}').val())">저장
+                </section>
+                <!--모임후기 푸터-->
+                <footer class="modal-card-foot">
+                    {% if userid == gathering.host %}
+                        <button class="button is-success" id="btn-modal-gathering"
+                                onclick="endup_gathering('{{ gathering.title }}',$('#star{{ loop.index }}').val(),
+                                        $('#review{{ loop.index }}').val())">저장
+                        </button>
+                    {% endif %}
+                    <button class="button" id="btn-cancel"
+                            onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
+                        돌아가기
                     </button>
-                {% endif %}
-                <button class="button" id="btn-cancel"
-                        onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
-                    돌아가기
-                </button>
-            </footer>
+                </footer>
+            </div>
         </div>
-        <button class="modal-close is-large" aria-label="close"
-                onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
-    </div>
-{% endfor %}
-{% for gathering in gatherings|reverse %}
-    <div class="modal" id="modal-gathering_update{{ loop.index }}">
-        <div class="modal-background"
-             onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title" id="title_rev{{ loop.index }}">{{ gathering.title }}</p>
-                <button class="delete" aria-label="close"
-                        onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="content" id="modal-gathering_update{{ loop.index }}">
-                    <div>날짜 : <input class="input is-small1" type="date" id="date_rev{{ loop.index }}"
-                                     value="{{ gathering.date }}"></div>
-                    <div>내용 : <input class="input is-small1" type="text" id="agenda_rev{{ loop.index }}"
-                                     value="{{ gathering.agenda }}"></div>
-                    <div>인원수 : <input class="input is-small1" type="number" id="max_guests_rev{{ loop.index }}"
-                                      value="{{ gathering.max_guests }}"></div>
-                    <div>장소 : <input class="input is-small1" type="text" id="location_rev{{ loop.index }}"
-                                     value="{{ gathering.location }}"></div>
-                    <br>
-                    <div>식당(음식) : {{ gathering.restaurant }} </div>
-                </div>
-            </section>
-            <footer class="modal-card-foot">
-                {% if userid == gathering.host %}
-                    <!-- 영준 2021-09-16 오후 10:28 수정 - 시작 -->
-                    <button class="button is-success" id="btn-modal-gathering"
+    {% endfor %}
+
+    <!--모임카드 수정창-->
+    {% for gathering in gatherings|reverse %}
+        <div class="modal" id="modal-gathering_update{{ loop.index }}">
+            <div class="modal-background"
+                 onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></div>
+            <div class="modal-card">
+                <!--모임카드 수정 상단-->
+                <header class="modal-card-head">
+                    <p class="modal-card-title" id="title_rev{{ loop.index }}">{{ gathering.title }}</p>
+                    <button class="delete" aria-label="close"
+                            onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
+                </header>
+                <!--모임카드 수정 입력필드-->
+                <section class="modal-card-body">
+                    <div class="content" id="modal-gathering_update{{ loop.index }}">
+                        <div>날짜 : <input class="input is-small1" type="date" id="date_rev{{ loop.index }}"
+                                         value="{{ gathering.date }}"></div>
+                        <div>내용 : <input class="input is-small1" type="text" id="agenda_rev{{ loop.index }}"
+                                         value="{{ gathering.agenda }}"></div>
+                        <div>인원수 : <input class="input is-small1" type="number" id="max_guests_rev{{ loop.index }}"
+                                          value="{{ gathering.max_guests }}"></div>
+                        <div>장소 : <input class="input is-small1" type="text" id="location_rev{{ loop.index }}"
+                                         value="{{ gathering.location }}"></div>
+                        <br>
+                        <div>식당(음식) : {{ gathering.restaurant }} </div>
+                    </div>
+                </section>
+                <!--모임카드 수정 푸터-->
+                <footer class="modal-card-foot">
+                    {% if userid == gathering.host %}
+                        <button class="button is-success" id="btn-modal-gathering"
                             onclick="update_gethering('{{ gathering.title }}', $('#date_rev{{ loop.index }}').val(),
                                     $('#agenda_rev{{ loop.index }}').val(), $('#max_guests_rev{{ loop.index }}').val(), $('#location_rev{{ loop.index }}').val(),
                                     $('#restaurant_rev{{ loop.index }}').val())">저장
+                        </button>
+                    {% endif %}
+                    <button class="button" id="btn-cancel"
+                            onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'>
+                        돌아가기
                     </button>
-                    <!-- 영준 2021-09-16 오후 10:28 수정 - 끝 -->
-                {% endif %}
-                <button class="button" id="btn-cancel"
-                        onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'>
-                    돌아가기
-                </button>
-            </footer>
+                </footer>
+            </div>
         </div>
-        <button class="modal-close is-large" aria-label="close"
-                onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
-    </div>
-{% endfor %}
+    {% endfor %}
 </body>
 </html>

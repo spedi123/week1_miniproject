@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
-    <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
-    <meta property="og:title" content="MEAT-UP"/>
-    <meta property="og:description" content="맛집을 함께 즐겨요!"/>
-    
-    <!-- Webpage Title -->
-    <title>MEAT-UP - 맛집을 함께 즐겨요!</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='sample_img.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='sample_img.png') }}" type="image/x-icon">
 
+    <!-- og:properties -->
+    <meta property="og:title" content="Meat up"/>
+    <meta property="og:description" content="맛집을 함께 즐겨요!"/>
     <meta property="og:image" content="{{ url_for('static', filename='og_img.jpg') }}"/>
+
+    <!-- Webpage Title -->
+    <title>Meat up - 맛집을 함께 즐겨요!</title>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -28,44 +32,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
-        <!-- Fonts -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&family=Sunflower:wght@500&display=swap"
           rel="stylesheet">
-
-    <style>
-        .title {
-            font-weight: 800;
-            font-size: 5rem;
-            font-family: 'Stylish', sans-serif;
-        }
-
-        .subtitle {
-            font-family: 'Gamja Flower', cursive;
-            font-size: 2rem;
-
-        }
-
-        .help {
-            color: gray;
-        }
-        .card {
-            width: 500px;
-            height: 400px;
-            margin: auto;
-        }
-
-        .section .container .box{
-            background-color: antiquewhite;
-            margin-bottom: 5px;
-        }
-
-        hr.dl{
-            border: thin solid grey;
-        }
-
-    </style>
 
     <script>
         function sign_out() {
@@ -73,14 +44,12 @@
                 alert('로그아웃!')
                 window.location.href = "/login"
             }
-
     </script>
 </head>
 
 <body class="has-navbar-fixed-top">
-
-<!-- 화면구성 -->
-<nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
+    <!--화면 상단 네비게이션 바-->
+    <nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
                 <img src="{{ url_for('static', filename='logo.png') }}">
@@ -89,18 +58,16 @@
             </a>
         </div>
         <div id="btns-navbar">
-{#            <button class="button is-success is-inverted" id="btn-navbar" onclick="window.location.href='/api/endup_view'">모임 후기 보기</button>#}
             <button class="button is-success is-inverted" id="btn-navbar" onclick="sign_out()">로그아웃</button>
         </div>
-
     </nav>
 
-<section class="section" id="post_box2">
-    {% for endup_gathering in endup_gatherings|reverse %}
-        <div class="container">
-            <div class="box">
-                <article class="media">
-                    <div class="media-left">
+    <!--모임 후기 출력-->
+    <section class="section" id="post_box2">
+        {% for endup_gathering in endup_gatherings|reverse %}
+            <div class="container">
+                <div class="box">
+                    <article class="media">
                         <div class="media-left">
                             <div class="image is-64x64">
                                 {#img 소스 적용#}
@@ -108,25 +75,24 @@
                                      src="{{ endup_gathering.food_img }}" alt="Image">
                             </div>
                         </div>
-                    </div>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <strong>{{ endup_gathering.title }}</strong> <small>@ {{ endup_gathering.location }}</small>
-                                <br>
-                            <b>모임일자</b> : {{ endup_gathering.date }}<br>
-                            <b>장소</b> : {{ endup_gathering.location }}<br>
-                            <b>식당(음식)</b> : {{ endup_gathering.restaurant }}<br>
-                            <hr class = 'dl'>
-                            <b>따봉</b> : {{ endup_gathering.star }}<br>
-                            <b>후기</b> : {{ endup_gathering.review }}
-                            </p>
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong>{{ endup_gathering.title }}</strong> <small>@ {{ endup_gathering.location }}</small>
+                                    <br>
+                                    <b>모임일자</b> : {{ endup_gathering.date }}<br>
+                                    <b>장소</b> : {{ endup_gathering.location }}<br>
+                                    <b>식당(음식)</b> : {{ endup_gathering.restaurant }}<br>
+                                    <hr class = 'dl'>
+                                    <b>따봉</b> : {{ endup_gathering.star }}<br>
+                                    <b>후기</b> : {{ endup_gathering.review }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </article>
+                    </article>
+                </div>
             </div>
-        </div>
-    {% endfor %}
-</section>
+        {% endfor %}
+    </section>
 </body>
 </html>
