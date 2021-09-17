@@ -233,6 +233,10 @@ def save_gathering():
         restaurant_receive = request.form['restaurant_give']
         host_receive = payload["id"]
 
+        # 중복검사
+        if db.gatherings.count({'title': title_receive}) > 0:
+            return jsonify({'result': 'success', 'msg': f'{title_receive} 모임 제목이 중복되었습니다!'})
+
         # 9/16. 15:23 restaurant_receive 값 기준으로, 널이면 기본이미지 출력
         if restaurant_receive == '':
             food_img = '../static/sample_img.png'
@@ -244,12 +248,9 @@ def save_gathering():
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
             data = requests.get(url, headers=headers)
             soup = BeautifulSoup(data.text, 'html.parser')
-            try:
-                food_img = soup.select_one(
-                    'body > main > article > div.column-wrapper > div > div > section > div.search-list-restaurants-inner-wrap > ul > li:nth-child(1) > div:nth-child(1) > figure > a > div > img')[
-                    'data-original']
-            except TypeError:
-                food_img = '../static/sample_img.png'
+            food_img = soup.select_one(
+                'body > main > article > div.column-wrapper > div > div > section > div.search-list-restaurants-inner-wrap > ul > li:nth-child(1) > div:nth-child(1) > figure > a > div > img')[
+                'data-original']
 
         doc = {
             'title' : title_receive,

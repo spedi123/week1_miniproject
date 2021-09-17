@@ -62,7 +62,7 @@ input::-webkit-calendar-picker-indicator {
     width: 702px;
     display: block;
     margin: 20px auto auto auto;
-    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%)
+    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%);
 }
 
 #btn-gathering-detail
@@ -148,7 +148,7 @@ body
 #btn-navbar
 {
     margin-top: 6px;
-    height: 51.99 px;
+    height: 51.99px;
     background-color: transparent;
     color: #78514c;
     font-weight: bold;
