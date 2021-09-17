@@ -189,7 +189,7 @@ def gathering_join():
                 "id": user_info["id"]
             }
             db.gathering_data.insert_one(doc)
-            return jsonify({"result": "success", 'msg': '조인 완료'})
+            return jsonify({"result": "success", 'msg': '모임 참석 신청 완료'})
         else:
             for i in attended_receive:
                 already_attended_time.append(db.gatherings.find_one({"title" : i})["date"])
@@ -244,9 +244,12 @@ def save_gathering():
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
             data = requests.get(url, headers=headers)
             soup = BeautifulSoup(data.text, 'html.parser')
-            food_img = soup.select_one(
-                'body > main > article > div.column-wrapper > div > div > section > div.search-list-restaurants-inner-wrap > ul > li:nth-child(1) > div:nth-child(1) > figure > a > div > img')[
-                'data-original']
+            try:
+                food_img = soup.select_one(
+                    'body > main > article > div.column-wrapper > div > div > section > div.search-list-restaurants-inner-wrap > ul > li:nth-child(1) > div:nth-child(1) > figure > a > div > img')[
+                    'data-original']
+            except TypeError:
+                food_img = '../static/sample_img.png'
 
         doc = {
             'title' : title_receive,

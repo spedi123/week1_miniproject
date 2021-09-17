@@ -29,6 +29,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
+        <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&family=Sunflower:wght@500&display=swap"
+          rel="stylesheet">
+
     <style>
         .title {
             font-weight: 800;
@@ -73,17 +79,22 @@
 </head>
 
 <body class="has-navbar-fixed-top">
-<button onclick="sign_out()">로그아웃</button>
+
 <!-- 화면구성 -->
 <nav class="navbar is-fixed-top is-white" id="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-            <img src="{{ url_for('static', filename='logo.png') }}">
-            <strong class="is-sparta"
-                    style="font-family: 'Stylish', sans-serif;font-size: larger;">M-EAT-UP</strong>
-        </a>
-    </div>
-</nav>
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <img src="{{ url_for('static', filename='logo.png') }}">
+                <strong class="is-sparta"
+                        style="font-family: 'Stylish', sans-serif;font-size: larger;">&nbsp;MEAT-UP</strong>
+            </a>
+        </div>
+        <div id="btns-navbar">
+{#            <button class="button is-success is-inverted" id="btn-navbar" onclick="window.location.href='/api/endup_view'">모임 후기 보기</button>#}
+            <button class="button is-success is-inverted" id="btn-navbar" onclick="sign_out()">로그아웃</button>
+        </div>
+
+    </nav>
 
 <section class="section" id="post_box2">
     {% for endup_gathering in endup_gatherings|reverse %}

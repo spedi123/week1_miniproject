@@ -12,7 +12,7 @@ body {
 
 .is-sparta {
     /*color: #e8344e !important;*/
-    color: orange !important;
+    color: #6f2205 !important;
 }
 
 .button.is-sparta {
@@ -42,6 +42,12 @@ input::-webkit-calendar-picker-indicator {
     height:100%;
 }
 
+.box
+{
+    background-color: #ffffff;
+    background-color: rgba( 255, 255, 255, 0.8 );
+}
+
 #post-box {
     /*background-color : black;*/
     margin-bottom: 20px;
@@ -50,9 +56,9 @@ input::-webkit-calendar-picker-indicator {
 .is-large
 {
     color: white;
-    background-color: #6599FF;
+    background-color: #e9d3c0;
     border-radius: 10px;
-    border-color: #6599FF;
+    border-color: #e9d3c0;
     width: 702px;
     display: block;
     margin: 20px auto auto auto;
@@ -62,19 +68,26 @@ input::-webkit-calendar-picker-indicator {
 #btn-gathering-detail
 {
     width: 466.18px;
+    background-color: #e9d3c0;
+    border-color: #78514c;
+    color: black;
+    font-family: 'Sunflower', sans-serif;
 }
 
 #navbar
 {
-    background-color: #6599FF;
+    background-color: #e9d3c0;
 }
 
 body
 {
-    background-image: url('https://cache.marriott.com/marriottassets/marriott/SJCSI/sjcsi-poolside-grill-8862-hor-feat.jpg');
+    background-image: url('/static/image_edited copy-2.jpg');
     background-position: center;
     background-size: cover;
+    /*height: 100vh;*/
 }
+
+
 
 #login-box
 {
@@ -83,11 +96,61 @@ body
 
 #btn-modal-gathering
 {
-    background-color: #6599FF;
+    background-color: #e9d3c0;
+    border-color: #78514c;
+    color: black;
+    font-family: 'Sunflower', sans-serif;
 }
 
 #btn-cancel
 {
+    color: black;
+    background-color: #e9d3c0;
+    border-color: #78514c;
+    font-family: 'Sunflower', sans-serif;
+}
+
+#btn-login
+{
+    background-color: #78514c;
     color: white;
-    background-color: orange;
+    font-family: 'Sunflower', sans-serif;
+}
+
+#btn-register
+{
+    color: black;
+    border-color: #e9d3c0;
+    font-family: 'Sunflower', sans-serif;
+}
+
+#btn-register-register
+{
+    background-color: #78514c;
+    color: white;
+    font-family: 'Sunflower', sans-serif;
+}
+
+#btn-create-gathering
+{
+    color: white;
+    background-color: #78514c;
+    border-color: #78514c;
+    font-family: 'Sunflower', sans-serif;
+}
+
+#btn-register-cancel
+{
+    border-color: #78514c;
+    font-family: 'Sunflower', sans-serif;
+}
+
+#btn-navbar
+{
+    margin-top: 6px;
+    height: 51.99 px;
+    background-color: transparent;
+    color: #78514c;
+    font-weight: bold;
+    font-family: 'Sunflower', sans-serif;
 }
