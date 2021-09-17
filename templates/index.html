@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--쿠키, 토큰 발급용/필요에 따라 수정 할것 -->
-    <!--1. main page와 스타일 맞추기       -->
-    <!--2. 폰트 결정하기        -->
     <!-- Webpage Title -->
-    <title>Meat up - 맛집을 함께 즐겨요!</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='sample_img.png') }}" type="image/x-icon">
-    <link rel="icon" href="{{ url_for('static', filename='sample_img.png') }}" type="image/x-icon">
-    <meta property="og:title" content="Meat up"/>
+    <title>MEAT-UP - 맛집을 함께 즐겨요!</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/x-icon">
+    <meta property="og:title" content="MEAT-UP"/>
     <meta property="og:description" content="맛집을 함께 즐겨요!"/>
     <meta property="og:image" content="{{ url_for('static', filename='og_img.jpg') }}"/>
     <!-- Required meta tags -->
@@ -162,7 +159,7 @@
         }
 
         /* 9/15 오전 추가 내용_update_gathering */
-        function update_gethering(title_rev, date_rev, agenda_rev, max_guests_rev, location_rev, restaurant_rev) {
+        function update_gethering(title_rev, date_rev, agenda_rev, max_guests_rev, location_rev) {
             {#let date_rev = $('#date_rev').val()#}
             {#let agenda_rev = $('#agenda_rev').val()#}
             {#let max_guests_rev = $('#max_guests_rev').val()#}
@@ -185,7 +182,7 @@
                     agenda_give: agenda_rev,
                     max_guests_give: max_guests_rev,
                     location_give: location_rev,
-                    restaurant_give: restaurant_rev
+                    {#restaurant_give: restaurant_rev#}
                 },
                 success: function (response) {
                     alert(response["msg"])
@@ -281,7 +278,7 @@
                         <p>내용 : {{ gathering.agenda }}</p>
                         <p>인원수 : {{ joind_counter[gathering.title] }} / {{ gathering.max_guests }}</p>
                         <p>장소 : {{ gathering.location }}</p>
-                        <p>식당(음식)( : {{ gathering.restaurant }}</p>
+                        <p>식당(음식) : {{ gathering.restaurant }}</p>
                     </div>
                 </section>
                 <footer class="modal-card-foot">

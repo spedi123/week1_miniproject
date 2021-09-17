@@ -13,9 +13,9 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 SECRET_KEY = 'SPARTA'
 
-# 각자 로컬에서 돌리고 나중에 꼭 바꿔주세요!!!
-client = MongoClient('localhost', 27017)
-db = client.test_db2
+# 로컬테스트 시 변경 후 진행해주세요.
+client = MongoClient('mongodb://test:test@13.125.38.245', 27017)
+db = client.meatup
 
 # 변경 시작 18:13
 @app.route('/api/endup_gathering', methods=['POST'])
@@ -279,7 +279,6 @@ def update_gathering():
     agenda_receive = request.form['agenda_give']
     max_guests_receive = request.form['max_guests_give']
     location_receive = request.form['location_give']
-    restaurant_receive = request.form['restaurant_give']
 
     # 데이터베이스 업데이트
     db.gatherings.update_one({'title': title_receive},
@@ -287,7 +286,7 @@ def update_gathering():
                                        'date': date_receive,
                                        'max_guests': max_guests_receive,
                                        'location': location_receive,
-                                       'restaurant': restaurant_receive}})
+                                       }})
 
     # 수정 완료 메세지 띄우기
     return jsonify({'msg': '수정 완료!'})
@@ -298,13 +297,6 @@ def delete_gathering():
     title_receive = request.form['title_give']
     db.gatherings.delete_one({'title': title_receive})
     return jsonify({'msg': '삭제 완료!'})
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
