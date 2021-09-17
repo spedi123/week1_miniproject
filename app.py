@@ -12,13 +12,13 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 SECRET_KEY = 'SPARTA'
 
-# 각자 로컬에서 돌리고 나중에 꼭 바꿔주세요!!!
-client = MongoClient('localhost', 27017)
-db = client.test_db_for_Youtube3
+# # 각자 로컬에서 돌리고 나중에 꼭 바꿔주세요!!!
+# client = MongoClient('localhost', 27017)
+# db = client.test_db_for_Youtube3
 
-# # 로컬테스트 시 변경 후 진행해주세요.
-# client = MongoClient('mongodb://test:test@13.125.38.245', 27017)
-# db = client.meatup
+# 로컬테스트 시 변경 후 진행해주세요.
+client = MongoClient('mongodb://test:test@13.125.38.245', 27017)
+db = client.meatup
 
 #로그인 페이지 렌더링
 @app.route('/login')
