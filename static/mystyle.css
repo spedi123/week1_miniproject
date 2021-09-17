@@ -53,7 +53,7 @@ input::-webkit-calendar-picker-indicator {
     background-color: #6599FF;
     border-radius: 10px;
     border-color: #6599FF;
-    width: 654.03px;
+    width: 702px;
     display: block;
     margin: 20px auto auto auto;
     box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%)
@@ -79,4 +79,15 @@ body
 #login-box
 {
     margin: 300px auto auto auto;
+}
+
+#btn-modal-gathering
+{
+    background-color: #6599FF;
+}
+
+#btn-cancel
+{
+    color: white;
+    background-color: orange;
 }

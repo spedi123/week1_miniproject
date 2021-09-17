@@ -251,24 +251,24 @@ window.location.reload();
                     </section>
                     <footer class="modal-card-foot">
                         {% if userid == gathering.host %}
-                            <button class="button is-success" onclick='$("#modal-gathering_update{{ loop.index }}").addClass("is-active")'>Revise</button>
-                            <button class="button is-success" onclick="delete_gethering('{{ gathering.title }}')">
-                                Delete
+                            <button class="button is-success" id="btn-modal-gathering" onclick='$("#modal-gathering_update{{ loop.index }}").addClass("is-active")'>수정</button>
+                            <button class="button is-success" id="btn-modal-gathering" onclick="delete_gethering('{{ gathering.title }}')">
+                                삭제
                             </button>
                             {#변경 시작 : 18:13#}
-                            <button class="button is-success" onclick='$("#modal-gathering_endup{{ loop.index }}").addClass("is-active")'>End Up Gathering</button>
+                            <button class="button is-success" id="btn-modal-gathering" onclick='$("#modal-gathering_endup{{ loop.index }}").addClass("is-active")'>후기 작성</button>
                             {#변경 끝 : 18:13#}
                         {% else %}
-                            <button class="button is-success" onclick="gathering_join(0, '{{ gathering.title }}')">
+                            <button class="button is-success" id="btn-modal-gathering" onclick="gathering_join(0, '{{ gathering.title }}')">
                                 Join
                             </button>
-                            <button class="button is-success" onclick="gathering_join(1, '{{ gathering.title }}')">
+                            <button class="button is-success" id="btn-modal-gathering" onclick="gathering_join(1, '{{ gathering.title }}')">
                                 Cancel
                                 Gathering
                             </button>
                         {% endif %}
-                        <button class="button" onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'>
-                            Cancel
+                        <button class="button" id="btn-cancel" onclick='$("#modal-gathering{{ loop.index }}").removeClass("is-active")'>
+                            돌아가기
                         </button>
                     </footer>
                 </div>
@@ -289,12 +289,18 @@ window.location.reload();
                                 <div id="gathering_create_box">
                                     <div>제목<input class="input is-small" type="text" id="title" placeholder="모임 제목을 설정해주세요">
                                     </div>
+                                    <br>
                                     <div>일자 <input class="input is-small" type="date" id="date"></div>
-                                    <div>내용 <textarea class="textarea" placeholder="모임 참석 내용" rows="10"
+                                    <br>
+                                    <div>설명 <textarea class="textarea is-small" placeholder="모임 주제 및 계획을 설명해주세요" rows="10"
                                                       id="agenda"></textarea></div>
+                                    <br>
                                     <div>최대인원 <input class="input is-small" type="number" id="max_guests"></div>
-                                    <div>위치 <input class="input is-small" type="text" id="location"></div>
-                                    <div>맛집정보 <input class="input is-small" type="text" id="restaurant"></div>
+                                    <br>
+                                    <div>장소 <input class="input is-small" type="text" id="location"></div>
+                                    <br>
+                                    <div>맛집 정보 <input class="input is-small" type="text" id="restaurant"></div>
+                                    <br>
                                 </div>
                             </div>
                             <nav class="level is-mobile">
@@ -303,11 +309,11 @@ window.location.reload();
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
-                                        <a class="button is-sparta" onclick="save_gathering()" id="create_btn">모임 작성</a>
+                                        <button class="button is-success" id="btn-modal-gathering" onclick="save_gathering()">저장</button>
                                     </div>
                                     <div class="level-item">
-                                        <a class="button is-sparta is-outlined"
-                                           onclick='$("#modal-post").removeClass("is-active")'>취소</a>
+                                        <button class="button" id="btn-cancel"
+                                           onclick='$("#modal-post").removeClass("is-active")'>취소</button>
                                     </div>
                                 </div>
                             </nav>
@@ -336,101 +342,95 @@ window.location.reload();
         <button class="modal-close is-large" aria-label="close"
                 onclick='$("#modal-gathering").removeClass("is-active")'></button>
     </div>
-</body>
-
-{#변경시작_18:13#}
-{% for gathering in gatherings|reverse %}
-    <div class="modal" id="modal-gathering_endup{{ loop.index }}">
-        <div class="modal-background"
-             onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">{{ gathering.title }}</p>
-                <button class="delete" aria-label="close"
-                        onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="content">
-                    <div class="field">
-                        <label class="label">Satisfaction</label>
-                        <div class="control">
-                            <div class="select is-rounded">
-                                <select id="star{{ loop.index }}">
-                                    <option value="5">👍👍👍👍👍</option>
-                                    <option value="4">👍👍👍👍</option>
-                                    <option value="3">👍👍👍</option>
-                                    <option value="2">👍👍</option>
-                                    <option value="1">👍</option>
-                                </select>
+    {% for gathering in gatherings|reverse %}
+        <div class="modal" id="modal-gathering_endup{{ loop.index }}">
+            <div class="modal-background"
+                 onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">{{ gathering.title }}</p>
+                    <button class="delete" aria-label="close"
+                            onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="content">
+                        <div class="field">
+                            <label class="label">만족도</label>
+                            <div class="control">
+                                <div class="select is-rounded">
+                                    <select id="star{{ loop.index }}">
+                                        <option value="5">👍👍👍👍👍</option>
+                                        <option value="4">👍👍👍👍</option>
+                                        <option value="3">👍👍👍</option>
+                                        <option value="2">👍👍</option>
+                                        <option value="1">👍</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="field">
-                    <label class="label">Review</label>
-                    <div class="control">
-                        <textarea class="textarea" placeholder="후기를 입력해 주세요!!" id="review{{ loop.index }}"></textarea>
+                    <div class="field">
+                        <label class="label">후기</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="후기를 입력해 주세요!" id="review{{ loop.index }}"></textarea>
+                        </div>
                     </div>
-                </div>
-            </section>
-            <footer class="modal-card-foot">
-                {% if userid == gathering.host %}
-                    <button class="button is-success"
-                            onclick="endup_gathering('{{ gathering.title }}',$('#star{{ loop.index }}').val(),
-                                    $('#review{{ loop.index }}').val())" >Save</button>
-                {% endif %}
-                <button class="button" onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
-                    Cancel
-                </button>
-            </footer>
+                </section>
+                <footer class="modal-card-foot">
+                    {% if userid == gathering.host %}
+                        <button class="button is-success" id="btn-modal-gathering"
+                                onclick="endup_gathering('{{ gathering.title }}',$('#star{{ loop.index }}').val(),
+                                        $('#review{{ loop.index }}').val())" >저장</button>
+                    {% endif %}
+                    <button class="button" id="btn-cancel" onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'>
+                        돌아가기
+                    </button>
+                </footer>
+            </div>
+            <button class="modal-close is-large" aria-label="close"
+                    onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
         </div>
-        <button class="modal-close is-large" aria-label="close"
-                onclick='$("#modal-gathering_endup{{ loop.index }}").removeClass("is-active")'></button>
-    </div>
+        {% endfor %}
+    {% for gathering in gatherings|reverse %}
+        <div class="modal" id="modal-gathering_update{{ loop.index }}">
+            <div class="modal-background"
+                 onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title" id="title_rev{{ loop.index }}">{{ gathering.title }}</p>
+                    <button class="delete" aria-label="close"
+                            onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="content" id="modal-gathering_update{{ loop.index }}">
+                        <div>날짜 : <input class="input is-small1" type="date" id="date_rev{{ loop.index }}"
+                                        value="{{ gathering.date }}"></div>
+                            <div>내용 : <input class="input is-small1" type="text" id="agenda_rev{{ loop.index }}"
+                                             value="{{ gathering.agenda }}"></div>
+                                <div>인원수 : <input class="input is-small1" type="number" id="max_guests_rev{{ loop.index }}"
+                                                  value="{{ gathering.max_guests }}"></div>
+                                    <div>장소 : <input class="input is-small1" type="text" id="location_rev{{ loop.index }}"
+                                                     value="{{ gathering.location }}"></div>
+                                        <div>식당 : <input class="input is-small1" type="text" id="restaurant_rev{{ loop.index }}"
+                                                         value="{{ gathering.restaurant }}"></div>
+                                        </div>
+                </section>
+                <footer class="modal-card-foot">
+                    {% if userid == gathering.host %}
+                        <!-- 영준 2021-09-16 오후 10:28 수정 - 시작 -->
+                        <button class="button is-success" id="btn-modal-gathering" onclick="update_gethering('{{gathering.title}}', $('#date_rev{{ loop.index }}').val(),
+                                $('#agenda_rev{{ loop.index }}').val(), $('#max_guests_rev{{ loop.index }}').val(), $('#location_rev{{ loop.index }}').val(),
+                                $('#restaurant_rev{{ loop.index }}').val())">저장</button>
+                        <!-- 영준 2021-09-16 오후 10:28 수정 - 끝 -->
+                    {% endif %}
+                    <button class="button" id="btn-cancel" onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'>
+                        돌아가기
+                    </button>
+                </footer>
+            </div>
+            <button class="modal-close is-large" aria-label="close"
+                    onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
+        </div>
     {% endfor %}
-{#변경끝 18:13#}
-
-{% for gathering in gatherings|reverse %}
-    <div class="modal" id="modal-gathering_update{{ loop.index }}">
-        <div class="modal-background"
-             onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title" id="title_rev{{ loop.index }}">{{ gathering.title }}</p>
-                <button class="delete" aria-label="close"
-                        onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="content" id="modal-gathering_update{{ loop.index }}">
-                    <div>날짜 : <input class="input is-small1" type="date" id="date_rev{{ loop.index }}"
-                                    value="{{ gathering.date }}"></div>
-                        <div>내용 : <input class="input is-small1" type="text" id="agenda_rev{{ loop.index }}"
-                                         value="{{ gathering.agenda }}"></div>
-                            <div>인원수 : <input class="input is-small1" type="number" id="max_guests_rev{{ loop.index }}"
-                                              value="{{ gathering.max_guests }}"></div>
-                                <div>장소 : <input class="input is-small1" type="text" id="location_rev{{ loop.index }}"
-                                                 value="{{ gathering.location }}"></div>
-                                    <div>식당 : <input class="input is-small1" type="text" id="restaurant_rev{{ loop.index }}"
-                                                     value="{{ gathering.restaurant }}"></div>
-                                    </div>
-            </section>
-            <footer class="modal-card-foot">
-                {% if userid == gathering.host %}
-                    <!-- 영준 2021-09-16 오후 10:28 수정 - 시작 -->
-                    <button class="button is-success" onclick="update_gethering('{{gathering.title}}', $('#date_rev{{ loop.index }}').val(),
-                            $('#agenda_rev{{ loop.index }}').val(), $('#max_guests_rev{{ loop.index }}').val(), $('#location_rev{{ loop.index }}').val(),
-                            $('#restaurant_rev{{ loop.index }}').val())">Save</button>
-                    <!-- 영준 2021-09-16 오후 10:28 수정 - 끝 -->
-                {% endif %}
-                <button class="button" onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'>
-                    Cancel
-                </button>
-            </footer>
-        </div>
-        <button class="modal-close is-large" aria-label="close"
-                onclick='$("#modal-gathering_update{{ loop.index }}").removeClass("is-active")'></button>
-    </div>
-{% endfor %}
-
-
+</body>
 </html>
