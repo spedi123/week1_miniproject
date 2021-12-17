@@ -1,26 +1,27 @@
 ## week1_miniproject
-7조 미니프로젝트
+Group 7 Mini Project
 
 Last Update : 9/17
-Description : 1주차 프로젝트 제출 버전
 
-## 프로젝트 제목
+## Project Title
 MEAT-UP
 
-## 프로젝트 설명
-만나서 고기먹자! Let's Meet(Meat) up!
+## Project Description
+Let's Meet(Meat) up!
 새로운 사람들과 맛집에서 즐거운 시간을 보내는 모임을 만들고 참가할 수 있는 웹서비스 입니다.
+Gathering with new people at restaurant and enjoying meal by webservice.
 이 뿐만 아니라 주최자는 모임을 마친 후 모임에 대한 후기를 남길 수 있어서 서비스 이용자들과 모임 경험과 음식점에 대한 정보를 공유할 수 있습니다.
+A perosn who made gathering group can write review, so people can share their exprience. 
 
-## 웹사이트 링크
-http://tpservice.shop/
+## Website Link
+http://tpservice.shop/(Not availabe now)
 
-## 시연 영상
+## Wesite Video
 https://youtu.be/8SDGsYM4nNM
 
-## 기술 스택
-프론트앤드 : Jinja, Bulma
-백앤드 : Flask
+## Stack
+Front-end : Jinja, Bulma
+Back-end : Flask
 
 ### **00. Intro**
 
@@ -55,8 +56,8 @@ https://youtu.be/8SDGsYM4nNM
 
 ### **04. Outro**
 
-***참가 인원*
-양주혁, 안성규, 권영준, 강준규
+***Made by*
+Juhyeok Yang, Seonggyu An, Yeongjoon Kwon, Junkyu Kang
 
 *개선사항, 한계점***
 - **api 로직의 역할이 명확하게 구분, 분리되어 있지 않음. ex) 하나의 api가 너무 다양한 기능을 구현함**
